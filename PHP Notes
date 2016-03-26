@@ -1,0 +1,105 @@
+PHP Notes
+PHP code is written in the html document. It is inserted between <?php and ?> tags
+However, a HTML document with PHP in it is not a .html file, rather the filename is terminated with .php
+PHP is run of the server so it is not limited to what the client can access like the way javascript is
+
+Concatenation Operator: In php you can just type a whole string like (echo "Hello, World";) or you can use the concatenation operator like (echo "Hello" . " " . "World";)
+This is the same as the plus sign (+) in javascript
+
+In additon to outputing strings PHP can also output numbers and computer arithmetic operations e.g echo 8 * 3
+
+Variables: Variables can be stored in PHP by using a dollar sign followed by the name e.g $favouriteSinger = 'Beyonce'; It seems that variables in PHP are dynamically typed.
+
+Arrays: They intialized as follows $array = array("first", "second"); They also indexed at 0 :-)
+They can accessed using [] or {}
+You can remove an element by doing "unset($array[2]);" or delete the whole array by doing "unset($array);"
+Arrays in PHP are not static in size. The code "array_push($array, value)" adds a value to the end of the specified array
+You can print the number of elements in the array via "count($array);"
+
+For loops: same as always
+
+For each: Here's an example:
+	given an array $languages...
+	foreach ($languages as $lang){
+		echo $lang;
+	}
+
+Random: You can specify a random item by using the syntax $randomvariable = rand(0, 1, 2, 3) //this picks a number between and including 0 to 3
+or you can do rand(MINval, MAXval);
+
+In php you can add html tags to the dom like: echo "<div class=\"coin\">H</div>"; where .coin is a class 
+
+You can also print out php variables by calling the normally except with {} around them e.g {myvariable}
+
+While loops: same as always
+
+String length: check the length of a string by $lengthOfAString = strlen($astring);
+
+Substring: substr(thestring, startingIndex, lengthOfPartialString);
+some other stirng methods include strtoupper and 
+strpos("string", "characheryourlookingfor");
+
+round: e.g round(a decimal);
+
+sorting: to sort an array in PHP you "sort($array)". the default is to sort in ascending order. use rsort to sort in descending order. 
+
+printing an array: to print an array "print join("a delimeter", $array);" this prints out the array with each element seperated by the specified delimeter
+
+functions can be defined like:
+	function functionName(){
+		//do stuff
+	}
+then called:
+	functionName();
+you can also return a value from a function as well by including "return aValue" in your function
+
+Objects: here's an example for future reference:
+class Person {
+// Creating some properties (variables tied to an object)
+public $isAlive = true;
+public $firstname;
+public $lastname;
+public $age;
+
+// Assigning the values
+public function __construct($firstname, $lastname, $age) {
+  $this->firstname = $firstname;
+  $this->lastname = $lastname;
+  $this->age = $age;
+}
+
+// Creating a method (function tied to an object)
+public function greet() {
+  return "Hello, my name is " . $this->firstname . " " . $this->lastname . ". Nice to meet you! :-)";
+}
+}
+
+// Creating a new person called "boring 12345", who is 12345 years old ;-)
+$me = new Person('boring', '12345', 12345);
+
+// Printing out, what the greet method returns
+echo $me->greet(); 
+
+
+3 functions to interact with objects in php:
+	is_a($var, "Objectnameinquotes"): boolean check to see if a variable is an instance of a class
+	property_exists($var, "propertynameisquotes"): boolean check to see if a variable has a certain property
+	method_exists(): you get the idea
+
+
+Associative Arrays a.k.a Dictionaries: 
+		$myArray = array(2012, 'blue', 5);
+
+        // ...and this is an associative array:
+        $myAssocArray = array('year' => 2012,
+                        'colour' => 'blue',
+                        'doors' => 5);
+            
+        // This code will output "blue"...
+        echo $myArray[1];
+        echo '<br />';
+            
+        // ... and this will also output "blue"!
+        echo $myAssocArray['colour'];
+
+---------------------------------------------------------------------

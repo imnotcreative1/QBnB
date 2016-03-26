@@ -1,9 +1,9 @@
 <?php
 // used to connect to the database
 $host = "localhost";
-$db_name = "cisc332_2";
-$username = "cisc332";
-$password = "cisc332password";
+$db_name = "QBnB";
+$username = "Matt";
+$password = "test";
 
 try {
     $con = new mysqli($host,$username,$password, $db_name);
@@ -11,7 +11,7 @@ try {
  
 // show error
 catch(Exception $exception){
-    echo "Connection error: " . $exception->getMessage();
+    echo "Connection error: " . $exception->getMessage() . "(No database connection)";
 }
 /*
  $con = new mysqli($host,$username,$password, $db_name);
