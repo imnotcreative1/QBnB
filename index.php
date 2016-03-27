@@ -102,7 +102,7 @@ if(isset($_POST['loginBtn'])){
 
          
         // Execute the query
-		if(mysql_query($query)){
+		if($stmt->execute()){
 			//If the username/password matches a user in our database
 			//Read the user details
 			//$myrow = $result->fetch_assoc();

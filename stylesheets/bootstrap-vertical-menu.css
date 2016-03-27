@@ -1,0 +1,55 @@
+html, body {
+    height: 100%; /* remind these guys they can be as tall as the viewport if they want */
+}
+.header {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    border-bottom: 1px solid grey;
+
+}
+
+.rowlength {
+   height: 10px;
+}
+
+.PinfoHead, .myBookingHeader {
+   text-align: center;
+   padding-bottom: 10px;
+}
+
+.navp {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
+
+.greeting {
+   font-size: 40px;
+   margin: auto;
+   width: 60%;
+   padding: 40px;
+}
+
+#profileMidCol {
+   border-left: solid 2px grey;
+   border-right: solid 2px grey;
+   border-style: offset;
+   border-height: 100%; 
+}
+.col-md-4 {
+   border-top: solid 10px grey;
+}

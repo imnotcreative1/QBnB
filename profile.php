@@ -1,8 +1,13 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Welcome to mysite</title>
-  
+        <title>Welcome to QBnB</title>
+        <!-- jQuery first, then Bootstrap JS. -->
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+
+        <!-- Bootstrap Vertical Nav -->
+        <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
 <body>
  <?php
@@ -14,11 +19,12 @@
  
  if(isset($_POST['updateBtn']) && isset($_SESSION['email'])){
   // include database connection
-    include_once 'config/connection.php'; 
+    include_once 'config.php'; 
     
-    $query = "UPDATE user SET password=?,email=? WHERE id=?";
+    $query = "UPDATE member SET password=?,phone_num=?, year = ? WHERE email=?";
  
-    $stmt = $con->prepare($query);  $stmt->bind_param('sss', $_POST['password'], $_POST['email'], $_SESSION['id']);
+    $stmt = $con->prepare($query);  
+    $stmt->bind_param('ssss', $_POST['password'], $_POST['phone_num'], $_POST['gradYear'], $_SESSION['email']);
     // Execute the query
         if($stmt->execute()){
             echo "Record was updated. <br/>";
@@ -35,7 +41,7 @@ if(isset($_SESSION['email'])){
     include_once 'config.php'; 
     
     // SELECT query
-        $query = "SELECT id,username, password, email FROM user WHERE email=?";
+        $query = "SELECT email, password, phone_num, year FROM member WHERE email=?";
  
         // prepare query for execution
         $stmt = $con->prepare($query);
@@ -51,6 +57,21 @@ if(isset($_SESSION['email'])){
         
         // Row data
         $myrow = $result->fetch_assoc();
+
+        //Make another query when the pages loads to add the list of bookings for a user
+
+        $listBookingsQuery = "SELECT * from booking
+        JOIN availability on booking.id = availability.id
+        WHERE booking.email = ?";
+
+        $stmt2 = $con->prepare($listBookingsQuery);
+        $stmt2->bind_Param("s", $_SESSION['email']);
+
+        $stmt2->execute();
+
+        // results 
+        $result2 = $stmt2->get_result();
+              
         
 } else {
     //User is not logged in. Redirect the browser to the login index.php page and kill this page.
@@ -59,29 +80,96 @@ if(isset($_SESSION['email'])){
 }
 
 ?>
- Welcome  <?php echo $myrow['username']; ?>, <a href="index.php?logout=1">Log Out</a><br/>
 <!-- dynamic content will be here -->
-<form name='editProfile' id='editProfile' action='profile.php' method='post'>
-    <table border='0'>
-        <tr>
-            <td>Username</td>
-            <td><input type='text' name='username' id='username' disabled  value="<?php echo $myrow['username']; ?>"  /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-             <td><input type='text' name='password' id='password'  value="<?php echo $myrow['password']; ?>" /></td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type='text' name='email' id='email'  value="<?php echo $myrow['email']; ?>" /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input type='submit' name='updateBtn' id='updateBtn' value='Update' /> 
-            </td>
-        </tr>
-    </table>
-</form>
+<ul class = "header">
+  <li class = "navp"><a href="#home">Home</a></li>
+  <li class = "navp"><a href="#Profile">Profile</a></li>
+  <li class = "navp"><a href="#Search">Find a Place</a></li>
+  <li class = "navp"><a href="#About">About</a></li>
+</ul>
+
+ <h2 class = "greeting"> Welcome  
+    <?php echo $myrow['email']; ?>, 
+    <a href="index.php?logout=1">Log Out</a><br/>
+</h2>
+ <div class="col-md-4">
+    <h3 class = "PinfoHead"> Your Profile Information </h3>
+    <form name='editProfile' id='editProfile' action='profile.php' method='post'>
+        <table border='0'>
+            <tr>
+                <td>Email</td>
+                <td><input type='text' name='email' id='email' disabled  value="<?php echo $myrow['email']; ?>"  /></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                 <td><input type='text' name='password' id='password'  value="<?php echo $myrow['password']; ?>" /></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type='value' name='phone_num' id='phone_num'  value="<?php echo $myrow['phone_num']; ?>" /></td>
+            </tr>
+             <tr>
+                <td>Graduation Year</td>
+                <td><input type='value' name='gradYear' id='gradYear'  value="<?php echo $myrow['year']; ?>" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type='submit' name='updateBtn' id='updateBtn' value='Update' /> 
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="col-md-4" id = "profileMidCol">
+    <h3 class = "myBookingHeader"> List of bookings </h3>
+    <?php
+        //display id, period, address
+        $idArray = array();
+        $periodArray = array();
+        $addressArray = array();
+        while ($row_users = $result2->fetch_assoc()) {
+            array_push($idArray, ($row_users['id']));
+            array_push($periodArray, ($row_users['period']));
+            array_push($addressArray, ($row_users['address']));
+        }  
+    ?>
+        <div class="col-md-4"> Id 
+            <?php 
+                foreach($idArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> Period
+            <?php 
+                foreach($periodArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> Address
+            <?php 
+                foreach($addressArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+</div>
+<div class="col-md-4"> 
+    <ul> 
+        <li> Add Booking Button </li>
+        <li> Remove Booking Button </li>
+        <li> View Comments </li>
+    </ul>
+</div> 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
 </html>
