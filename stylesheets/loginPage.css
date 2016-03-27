@@ -1,0 +1,80 @@
+html, body {
+    height: 100%; /* remind these guys they can be as tall as the viewport if they want */
+    background-color: #ECECEC;
+}
+html { 
+  background: url("/QBnB/homecoming.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+#title {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    overflow: hidden;
+    font-size: 60px;
+
+}
+
+table {
+  padding: 10px;
+}
+
+.row {
+   box-shadow: 0 3px 1.7px 2px
+}
+
+.about {
+
+}
+
+h2, h4 {
+  text-align: center;
+  margin-top: 50px;
+}
+.mainContent {
+  margin-top: 50px;
+}
+
+.suform {
+  margin: auto;
+}
+
+#signup {
+  margin-left: 520px;
+  margin-top: 100px;
+
+}
+
+#login {
+  margin-top: 22px;
+}
+
+#loginBtn {
+  margin-top: 22px;
+}
+
+.Lprompt {
+  color: white;
+}
+
+#header {
+  width: 100%;
+  height: 80px;
+  background-color: #333;
+}
+
+li a, #title {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+    background-color: #111;
+}
