@@ -71,7 +71,20 @@ if(isset($_SESSION['email'])){
 
         // results 
         $result2 = $stmt2->get_result();
-              
+
+        //Make a query when the page loads to add the list of holdings for a user
+
+        $listHoldingQuery = "SELECT * FROM property
+        JOIN features on property.address = features.address
+        WHERE email = ?";
+
+        $stmt3 = $con->prepare($query);
+
+        $stmt3->bind_Param("s", $_SESSION['email']);
+
+        $stmt3->execute();
+
+        $result3 = $stmt3->get_result();
         
 } else {
     //User is not logged in. Redirect the browser to the login index.php page and kill this page.
@@ -82,10 +95,10 @@ if(isset($_SESSION['email'])){
 ?>
 <!-- dynamic content will be here -->
 <ul class = "header">
-  <li class = "navp"><a href="#home">Home</a></li>
-  <li class = "navp"><a href="#Profile">Profile</a></li>
-  <li class = "navp"><a href="#Search">Find a Place</a></li>
-  <li class = "navp"><a href="#About">About</a></li>
+  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
 </ul>
 
  <h2 class = "greeting"> Welcome  
@@ -122,7 +135,7 @@ if(isset($_SESSION['email'])){
     </form>
 </div>
 <div class="col-md-4" id = "profileMidCol">
-    <h3 class = "myBookingHeader"> List of bookings </h3>
+    <h3 class = "myBookingHeader"> List of Your Bookings </h3>
     <?php
         //display id, period, address
         $idArray = array();
@@ -161,6 +174,45 @@ if(isset($_SESSION['email'])){
             ?>
 
         </div>
+        <h3> List of Your Holdings </h3>
+        <?php
+            $idArray = array();
+            $priceArray = array();
+            $addressArray = array();
+            while ($row_users = $result3->fetch_assoc()) {
+                array_push($priceArray, ($row_users['price']));
+                array_push($districtArray, ($row_users['district_name']));
+                array_push($addressArray, ($row_users['address']));
+            }  
+        ?>
+        <div class="col-md-4"> Address
+            <?php 
+                foreach($addressArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> Price
+            <?php 
+                foreach($priceArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> District
+            <?php 
+                foreach($districtArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+
 </div>
 <div class="col-md-4"> 
     <ul> 

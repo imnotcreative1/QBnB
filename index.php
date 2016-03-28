@@ -2,7 +2,10 @@
 <html>
     <head>
         <title>Welcome to mysite</title>
-  
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+
+        <!-- Bootstrap Vertical Nav -->
+        <link rel="stylesheet" href="stylesheets/loginPage.css">
     </head>
 <body>
 
@@ -123,61 +126,64 @@ if(isset($_POST['loginBtn'])){
  }
  
 ?>
-
+<div class="row" id = "header">
+    <div class = "col-md-4" id = "title">
+        QBnB
+    </div>
+    <div class = "col-md-8">
+        <form  name='login' id='login' action='index.php' method='post'>
+            <div class="Lprompt col-md-3"> Username :  
+                <input type='text' name='email' id='email' />
+            </div>
+            <div class = "Lprompt col-md-3"> Password : 
+                <input type='password' name='password' id='password' />
+            </div>
+            <div class = "col-md-1">
+                <input type='submit' id='loginBtn' name='loginBtn' value='Log In' />
+            </div>
+        </form>
+    </div>
+</div>
 <!-- dynamic content will be here -->
-<h2> QBnB </h2>
- <form name='login' id='login' action='index.php' method='post'>
-    <table border='0'>
-        <tr>
-            <td>Username</td>
-            <td><input type='text' name='email' id='email' /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-             <td><input type='password' name='password' id='password' /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input type='submit' id='loginBtn' name='loginBtn' value='Log In' /> 
-            </td>
-        </tr>
-    </table>
-</form>
-<form name='signup' id='signup' action='index.php' method='post'>
-    <table border='0'>
-        <tr>
-            <td>Email</td>
-            <td><input type='text' name='signupEmail' id='signupEmail' /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-             <td><input type='password' name='signupPassword' id='signupPassword' /></td>
-        </tr>
-        <tr>
-            <td>Phone Number</td>
-            <td><input type='value' name='phone_num' id='phone_num' /></td>
-        </tr>
-        <tr>
-            <td>Graduation Year</td>
-             <td><input type='value' name='gradYear' id='gradYear' /></td>
-        </tr>
-        <tr>
-            <td>Degree Name</td>
-            <td><input type='text' name='degree_name' id='degree_name' /></td>
-        </tr>
-        <tr>
-            <td>Faculty Name</td>
-             <td><input type='text' name='faculty_name' id='faculty_name' /></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input type='submit' id='signupBtn' name='signupBtn' value='Sign Up' /> 
-            </td>
-        </tr>
-    </table>
-</form>
-
+<row>
+    <h2> Join the Tri-Colour Community </h2>
+</row>
+<row>
+    <h4> Sign-up Below! </h4>
+</row>
+    <form class="form-horizontal" name='signup' id='signup' action='index.php' method='post'>
+            <table>
+            <tr>
+                <td>Email</td>
+                <td><input type='text' name='signupEmail' id='signupEmail' /></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                 <td><input type='password' name='signupPassword' id='signupPassword' /></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type='value' name='phone_num' id='phone_num' /></td>
+            </tr>
+            <tr>
+                <td>Graduation Year</td>
+                 <td><input type='value' name='gradYear' id='gradYear' /></td>
+            </tr>
+            <tr>
+                <td>Degree Name</td>
+                <td><input type='text' name='degree_name' id='degree_name' /></td>
+            </tr>
+            <tr>
+                <td>Faculty Name</td>
+                 <td><input type='text' name='faculty_name' id='faculty_name' /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type='submit' id='signupBtn' name='signupBtn' value='Sign Up' /> 
+                </td>
+            </tr>
+        </table>
+    </form>
 </body>
 </html>
