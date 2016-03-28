@@ -39,7 +39,7 @@ if(isset($_SESSION['email'])){
  ?>
  
  <?php
- if(isset($_POST['createPropertyBtn']) && isset($_SESSION['email'])){
+ if(isset($_POST['editPropertyBtn']) && isset($_SESSION['email'])){
   // include database connection
     include_once 'config.php'; 
     
@@ -50,6 +50,7 @@ if(isset($_SESSION['email'])){
     // Execute the query
         if($stmt->execute()){
             echo "Property was updated. <br/>";
+            header("Location: /QBnB/profile.php"); 
         }else{
             echo 'Unable to update record. Please try again. <br/>';
         }

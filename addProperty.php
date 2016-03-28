@@ -28,12 +28,15 @@
     // Execute the query
         if($stmt->execute()){
             echo "Property was added. <br/>";
-            $query = "INSERT into Availability (period, address) Values (100,  ?)";
-            $stmt2->$con->prepare($query);
+            $query = "INSERT into Availability (period, address) Values (15, ?)";
+            $stmt2 = $con->prepare($query);
+            echo $query;
+            echo $_POST['address'];
             //$aNum = 100;
             $stmt2->bind_param('s', $_POST['address']);
-            if ($stmt->execute()){
-                echo "Availability was added. <br/>";
+            if ($stmt2->execute()){
+                header("Location: /QBnB/profile.php");
+                //echo "Availability was added. <br/>";
             }
             else {
                 echo "Availability was not added. <br/>";
@@ -76,12 +79,6 @@
              <tr>
                 <td>Room(s) Type</td>
                 <td><input type='text' name='type' id='type'/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type='submit' name='createPropertyBtn' id='createPropertyBtn' value='Update' /> 
-                </td>
             </tr>
         </table>
         <div> Add Availability </div>
@@ -135,6 +132,14 @@
                 <option value="31">31</option>
             </select>
             <input type='value' name='year' id='year'/>
+            <table>
+             <tr>
+                <td></td>
+                <td>
+                    <input type='submit' name='createPropertyBtn' id='createPropertyBtn' value='Update' /> 
+                </td>
+            </tr>
+        </table>
         </row>
 
     </form>

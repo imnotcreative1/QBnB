@@ -2,10 +2,10 @@
 <html>
     <head>
         <title>QBnB</title>
-  		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">-->
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
 
         <!-- Bootstrap Vertical Nav -->
-        <!--<link rel="stylesheet" href="stylesheets/loginPage.css">-->
+        <link rel="stylesheet" href="stylesheets/loginPage.css">
     </head>
 <body>
 
@@ -57,7 +57,7 @@ if(isset($_POST['loginBtn'])){
 		$result = $stmt->get_result();
 
 		// Get the number of rows returned
-		$num = $result->num_rows;;
+		$num = $result->num_rows;
 		//echo "here";
 		if($num>0){
 			//If the username/password matches a user in our database
