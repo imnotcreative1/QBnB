@@ -8,6 +8,12 @@
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
 	</head>
 	<body>
+	<ul class = "header">
+	  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+	  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+	  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+	  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+	</ul>
 		<h2> About QBnB </h2>
 		<p> This QBnB website was created by three Computer Engineering students, Patrick Dang-Ho,
 			Jordan McGregor and Matthew Sims. The purpose of this website is to 

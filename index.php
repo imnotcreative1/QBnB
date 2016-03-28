@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Welcome to mysite</title>
-  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+        <title>QBnB</title>
+  		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">-->
 
         <!-- Bootstrap Vertical Nav -->
-        <link rel="stylesheet" href="stylesheets/loginPage.css">
+        <!--<link rel="stylesheet" href="stylesheets/loginPage.css">-->
     </head>
 <body>
 
@@ -18,7 +18,7 @@
  //check if the user clicked the logout link and set the logout GET parameter
 if(isset($_GET['logout'])){
 	//Destroy the user's session.
-	$_SESSION['id']=null;
+	$_SESSION['email']=null;
 	session_destroy();
 }
  ?>
@@ -26,7 +26,7 @@ if(isset($_GET['logout'])){
  
  <?php
  //check if the user is already logged in and has an active session
-if(isset($_SESSION['id'])){
+if(isset($_SESSION['email'])){
 	//Redirect the browser to the profile editing page and kill this page.
 	header("Location: profile.php");
 	die();
@@ -35,7 +35,6 @@ if(isset($_SESSION['id'])){
  
  <?php
 
- 
 //check if the login form has been submitted
 if(isset($_POST['loginBtn'])){
  
@@ -50,8 +49,6 @@ if(isset($_POST['loginBtn'])){
 		
         // bind the parameters. This is the best way to prevent SQL injection hacks.
         $stmt->bind_Param("ss", $_POST['email'], $_POST['password']);
-
-
          
         // Execute the query
 		$stmt->execute();
@@ -85,6 +82,8 @@ if(isset($_POST['loginBtn'])){
  
     // include database connection
     include_once 'config.php'; 
+
+    echo "here";
 	
 	// SELECT query
         $query = "Insert into member values (?, ?, ?, ?, ?, ?)";
@@ -93,28 +92,27 @@ if(isset($_POST['loginBtn'])){
         if($stmt = $con->prepare($query)){
 		
         // bind the parameters. This is the best way to prevent SQL injection hacks.
-        //$stmt->bind_Param("ssiiss", $_POST['signupEmail'], $_POST['signupPassword'],$_POST['phone_num'], $_POST['gradYear'], $_POST['degree_name'], $_POST['faculty_name']);
-        $first = "jdawg@queensu.ca";
-        $second = "1234";
-        $third = 9999999999;
-        $fourth = 2017;
-        $fifth = "BEng";
-        $sixth = "Engineering & Applied Science";
-        $stmt->bind_Param("ssiiss", $first, $second,$third, $fourth, $fifth, $sixth);
+        $stmt->bind_Param("ssiiss", $_POST['signupEmail'], $_POST['signupPassword'],$_POST['phone_num'], $_POST['gradYear'], $_POST['degree_name'], $_POST['faculty_name']);
+        
 
 
          
         // Execute the query
 		if($stmt->execute()){
-			//If the username/password matches a user in our database
-			//Read the user details
-			//$myrow = $result->fetch_assoc();
-			//Create a session variable that holds the user's id
-			//$_SESSION['id'] = $myrow['id'];
-			//Redirect the browser to the profile editing page and kill this page.
-			header("Location: /QBnB/profile.php");
-			echo "user successfully created";
-			die();
+			//if the user creates a new user we should update the session to include their information
+            //load the information so we know what to load in the profile page 
+             /*$query = "SELECT email, password FROM member WHERE email=" . echo $_POST['signupEmail'] . " AND password=" . $_POST['signupPassword'] ;
+ 
+            // prepare query for execution
+            if($getNewUser = $con->prepare($query)){
+                $result = $getNewUser->result();
+                $newUserInfo = $result->fetch_assoc();
+                $_SESSION['email'] = $newUserInfo['email'];*/
+                $_SESSION['email'] = $_POST['signupEmail'];
+    			header("Location: /QBnB/profile.php");
+    			echo "user successfully created";
+    			die();
+            //}
 		} else {
 			//If the username/password doesn't matche a user in our database
 			// Display an error message and the login form

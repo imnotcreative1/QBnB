@@ -14,6 +14,7 @@
 	  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
 	  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
 	</ul>
+	<h1> 
 
 	</body>
 </html>
