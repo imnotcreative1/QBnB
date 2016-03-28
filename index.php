@@ -83,7 +83,6 @@ if(isset($_POST['loginBtn'])){
     // include database connection
     include_once 'config.php'; 
 
-    echo "here";
 	
 	// SELECT query
         $query = "Insert into member values (?, ?, ?, ?, ?, ?)";
