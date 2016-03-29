@@ -10,12 +10,15 @@
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
 
-<nav class = "header">
+
+<ul class = "header">
   <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
   <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
   <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
   <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-</nav>
+  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
+</ul>
 
 <body>
  <?php
