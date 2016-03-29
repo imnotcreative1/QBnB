@@ -82,12 +82,14 @@ $searchResults = "";
 	}
  	}
  ?>
-	<ul class = "header">
-	  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-	  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-	  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-	  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-	</ul>
+<ul class = "header">
+  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
+  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
+</ul>
 	<h1> Search Property Page </h1>
 	<!--List the criteria
 	//Price range-->
@@ -164,9 +166,15 @@ $searchResults = "";
 			            array_push($rooms, ($row_results['rooms']));
 			            array_push($type, ($row_results['type']));
 	        		}
+	        		/*<a href="http://example.com">
+					    <div style="height:100%;width:100%">
+					      hello world
+					    </div>
+					  </a>*/
 	        		for ($i = 0; $i < count($address); $i++){  
 		        		echo "<tr>
-		        			<td>
+		        			<td> 
+		        				<a href=/QBnB/viewProperty.php?propertyAddress=" . urlencode($address[$i]) . "> 
 		        				" . $address[$i] . "
 		        			</td>
 		        			<td>
