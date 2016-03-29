@@ -18,8 +18,8 @@
  <?php
  $address = $_GET['propertyAddress'];
  echo $address;
- $_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
- $_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
+ //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
+ //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
  $allowedToEdit = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
  //Loading the property to be edited
 if($allowedToEdit){
@@ -41,7 +41,12 @@ if($allowedToEdit){
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
     }
 
-} 
+} else {
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+
  ?>
  
  <?php
