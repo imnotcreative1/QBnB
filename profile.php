@@ -4,11 +4,19 @@
         <title>Welcome to QBnB</title>
         <!-- jQuery first, then Bootstrap JS. -->
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
         <!-- Bootstrap Vertical Nav -->
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
+
+<nav class = "header">
+  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+</nav>
+
 <body>
  <?php
   //Create a user session or resume an existing one
@@ -34,7 +42,13 @@
  }
  
  ?>
- 
+
+<?php
+//    if (isset($_GET['editProperty']) && isset){
+
+  //  }
+?>
+
  <?php
 if(isset($_SESSION['email'])){
    // include database connection
@@ -74,11 +88,11 @@ if(isset($_SESSION['email'])){
 
         //Make a query when the page loads to add the list of holdings for a user
 
-        $listHoldingQuery = "SELECT * FROM property
-        JOIN features on property.address = features.address
-        WHERE email = ?";
+        $listHoldingQuery = "select email, address, price, count(*) as 
+        \"NoBookings\" from availability natural join property 
+        natural join (select id from booking) as T group by address";
 
-        $stmt3 = $con->prepare($query);
+        $stmt3 = $con->prepare($listHoldingQuery);
 
         $stmt3->bind_Param("s", $_SESSION['email']);
 
@@ -94,15 +108,6 @@ if(isset($_SESSION['email'])){
 
 ?>
 <!-- dynamic content will be here -->
-<ul class = "header">
-  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
-  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-</ul>
-
  <h2 class = "greeting"> Welcome  
     <?php echo $myrow['email']; ?>, 
     <a href="index.php?logout=1">Log Out</a><br/>
@@ -150,7 +155,7 @@ if(isset($_SESSION['email'])){
         }  
     ?>
         <div class="col-md-4"> Id 
-            <?php 
+            <?php   
                 foreach($idArray as $i){
                     echo "<p> </p>";
                     echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
@@ -176,44 +181,35 @@ if(isset($_SESSION['email'])){
             ?>
 
         </div>
-        <h3> List of Your Holdings </h3>
+        <h3> List of Your Properties </h3>
         <?php
-            $idArray = array();
             $priceArray = array();
             $addressArray = array();
+            $bookingArray = array();
             while ($row_users = $result3->fetch_assoc()) {
                 array_push($priceArray, ($row_users['price']));
-                array_push($districtArray, ($row_users['district_name']));
                 array_push($addressArray, ($row_users['address']));
+                array_push($bookingArray, ($row_users['NoBookings']));
             }  
         ?>
-        <div class="col-md-4"> Address
-            <?php 
-                foreach($addressArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+        <table class="table table-striped">
+            <tr> 
+                <th> Address </th>
+                <th> Price </th>
+                <th> No. Bookings </th>
+                <th> Options </th>
+            </tr>
+            <?php   
+                for ($i = 0; $i < sizeof($priceArray) ; $i++){
+                    echo "<tr>";
+                    echo "<td> " . $addressArray[$i] . "</td>";
+                    echo "<td> " . $priceArray[$i] . "</td>";
+                    echo "<td> " . $bookingArray[$i] . "</td>";
+                    echo "<td> <a href=\"/QBnB/edit.php?=" . $addressArray[$i] . "\">Edit</a></td>";
+                    echo "</tr>";
                 }
             ?>
-
-        </div>
-        <div class="col-md-4"> Price
-            <?php 
-                foreach($priceArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
-                }
-            ?>
-
-        </div>
-        <div class="col-md-4"> District
-            <?php 
-                foreach($districtArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
-                }
-            ?>
-
-        </div>
+        </table>
 
 </div>
 <div class="col-md-4"> 
