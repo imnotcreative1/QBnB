@@ -94,39 +94,10 @@ if(isset($_SESSION['email'])){
 
 ?>
 <!-- dynamic content will be here -->
- <h2 class = "greeting"> Admin profile page 
+ <h2 class = "greeting"> Admin page 
     <?php echo $myrow['email']; ?>
 </h2>
- <div class="col-md-4">
-    <h3 class = "PinfoHead"> Your Profile Information </h3>
-    <form name='editProfile' id='editProfile' action='profile.php' method='post'>
-        <table border='0'>
-            <tr>
-                <td>Email</td>
-                <td><input type='text' name='email' id='email' disabled  value="<?php echo $myrow['email']; ?>"  /></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                 <td><input type='text' name='password' id='password'  value="<?php echo $myrow['password']; ?>" /></td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td><input type='value' name='phone_num' id='phone_num'  value="<?php echo $myrow['phone_num']; ?>" /></td>
-            </tr>
-             <tr>
-                <td>Graduation Year</td>
-                <td><input type='value' name='gradYear' id='gradYear'  value="<?php echo $myrow['year']; ?>" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type='submit' name='updateBtn' id='updateBtn' value='Update' /> 
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
-<div class="col-md-4" id = "profileMidCol">
+<div class="col-md-6" id = "profileMidCol">
        <h3 class = "MidHeader"> All properties </h3>
         <?php
             $addressArray = array();
@@ -154,7 +125,7 @@ if(isset($_SESSION['email'])){
         </table>
 
 </div>
-<div class="col-md-4" id = "Members_LeftCol"> 
+<div class="col-md-6" id = "Members_LeftCol"> 
     <h3 class = "LeftHeader"> All Members </h3>
         <?php
             $nameArray = array();
