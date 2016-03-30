@@ -26,7 +26,7 @@ if($allowedToEdit){
     include_once 'config.php';
     $query = "SELECT address, price, district_name, rooms, type FROM property WHERE address = ?";
     $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $_SESSION['property']);
+    $stmt->bind_param("s", $address);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
@@ -142,9 +142,8 @@ if($allowedToEdit){
   <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
 </nav>
 
- <h2 > Edit Your Property: <?php 
-    //echo $_SESSION['property']?>, 
-    <a href="index.php?logout=1">Log Out</a><br/>
+ <h2 > Edit the Property: <?php 
+    echo $address?>
 </h2>
     <?php echo $currentPageURL; ?>
     <form name='newProperty' id='newProperty' method='post'>
@@ -178,9 +177,11 @@ if($allowedToEdit){
         </table>
     </form>
     <p> Add Availibilities </p>
-    <form name='newAvail' id ='newAvail' method='post'>
-        <div> Day \t Month \t Year </div>
-        <row>
+    <form name='newAvail' id ='newAvail' method='Post'>
+        <table>
+        <!--<tr> <td> Day </td>  <td> Month </td> <td> Year </td> </tr>-->
+        <tr>
+        <td>
             <select name='Month' id='Month'>
               <option value="JAN">JAN</option>
               <option value="FEB">FEB</option>
@@ -195,6 +196,8 @@ if($allowedToEdit){
               <option value="NOV">NOV</option>
               <option value="DEC">DEC</option>
             </select>
+        </td>
+        <td>
             <select name='Day' id='Day'>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -228,8 +231,13 @@ if($allowedToEdit){
                 <option value="30">30</option>
                 <option value="31">31</option>
             </select>
-            <input type='value' name='year' id='year'/>
+        </td>
+        <td>
+            <input type='value' name='year' id='year' value="2016"/>
             <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Update' /> 
+        </td>
+        </tr>
+        </table>
     </form>
     <p> Availiblities </p>
     <?php
