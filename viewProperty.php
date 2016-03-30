@@ -59,16 +59,6 @@ if($allowedToEdit){
         //$stmt->bind_param("s", $address);//Uncomment this after testing
         $stmt->execute();
         $result = $stmt->get_result();
-        $num = $result->num_rows;
-        if ($num > 0){
-            //echo "Property Loaded";
-            $searchResults = $result->fetch_assoc();
-
-        }
-        else {
-            //echo "Property Failed to Load";
-            //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
-        }
 
     } 
 ?>
@@ -258,12 +248,14 @@ else {
                     $district = array();
                     $rooms = array();
                     $type = array();
-                    while ($row_results = $searchResults->fetch_assoc()) {
-                        array_push($address, ($row_results['address']));
-                        array_push($price, ($row_results['price']));
-                        array_push($district, ($row_results['district_name']));
-                        array_push($rooms, ($row_results['rooms']));
-                        array_push($type, ($row_results['type']));
+                    if ($searchResults->num_rows > 0){
+                        while ($row_results = $searchResults->fetch_assoc()) {
+                            array_push($address, ($row_results['address']));
+                            array_push($price, ($row_results['price']));
+                            array_push($district, ($row_results['district_name']));
+                            array_push($rooms, ($row_results['rooms']));
+                            array_push($type, ($row_results['type']));
+                        }
                     }
                     /*<a href="http://example.com">
                         <div style="height:100%;width:100%">
@@ -295,7 +287,6 @@ else {
            
         </table>
     </form>
-    <p> Availiblities </p>
     <?php
         //display id, period, address
         $periodArray = array();

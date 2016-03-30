@@ -234,7 +234,7 @@ if($allowedToEdit){
         </td>
         <td>
             <input type='value' name='year' id='year' value="2016"/>
-            <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Update' /> 
+            <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Add' /> 
         </td>
         </tr>
         </table>

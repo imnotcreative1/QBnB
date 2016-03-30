@@ -29,7 +29,7 @@ if(!isset($_SESSION['email'])){
  if(isset($_POST['createPropertyBtn']) && isset($_SESSION['email'])){
   // include database connection
     include_once 'config.php'; 
-    
+    /*echo "here";
     $query = "INSERT into property Values (?,?, ?, ?, ?, ?)";
  
     $stmt = $con->prepare($query);  
@@ -37,22 +37,29 @@ if(!isset($_SESSION['email'])){
     // Execute the query
         if($stmt->execute()){
             //echo "Property was added. <br/>";
-            $query = "INSERT into Availability (period, address) Values (15, ?)";
+            include_once 'datePeriodConversion.php';
+            $month = $_POST['Month'];
+            $year = $_POST['Year'];
+            $day = $_POST['Day'];
+            $dateFormat= $year . "-" . $month . "-" . $day;
+            echo $dateFormat; 
+            $query = "INSERT into Availability (period, address) Values (?, ?)";
             $stmt2 = $con->prepare($query);
             //echo $query;
             //echo $_POST['address'];
             //$aNum = 100;
-            $stmt2->bind_param('s', $_POST['address']);
+            $stmt2->bind_param('is', dateToPeriod($dateFormat) ,$_POST['address']);
             if ($stmt2->execute()){
                 header("Location: /QBnB/profile.php");
-                //echo "Availability was added. <br/>";
+                echo "Availability was added. <br/>";
+                echo dateToPeriod($dateFormat);
             }
             else {
-                //echo "Availability was not added. <br/>";
+                echo "Availability was not added. <br/>";
             }
         }else{
-            //echo 'Unable to add property. Please try again. <br/>';
-        }
+            echo 'Unable to add property. Please try again. <br/>';
+        }*/
  }
 
 
@@ -90,42 +97,41 @@ if(!isset($_SESSION['email'])){
                 <td><input type='value' name='rooms' id='rooms'/></td>
             </tr>
              <tr>
-                <td>Room(s) Type</td>
+                <td>Property Type</td>
                 <td><input type='text' name='type' id='type'/></td>
             </tr>
         </table>
         <div> Add Availability </div>
-         <form name='newAvail' id ='newAvail' method='Post'>
         <table>
         <!--<tr> <td> Day </td>  <td> Month </td> <td> Year </td> </tr>-->
         <tr>
         <td>
             <select name='Month' id='Month'>
-              <option value="JAN">JAN</option>
-              <option value="FEB">FEB</option>
-              <option value="MAR">MAR</option>
-              <option value="APR">APR</option>
-              <option value="MAY">MAY</option>
-              <option value="JUNE">JUNE</option>
-              <option value="JULY">JULY</option>
-              <option value="AUG">AUG</option>
-              <option value="SEPT">SEPT</option>
-              <option value="OCT">OCT</option>
-              <option value="NOV">NOV</option>
-              <option value="DEC">DEC</option>
+              <option value="01">JAN</option>
+              <option value="02">FEB</option>
+              <option value="03">MAR</option>
+              <option value="04">APR</option>
+              <option value="05">MAY</option>
+              <option value="06">JUNE</option>
+              <option value="07">JULY</option>
+              <option value="08">AUG</option>
+              <option value="09">SEPT</option>
+              <option value="10">OCT</option>
+              <option value="11">NOV</option>
+              <option value="12">DEC</option>
             </select>
         </td>
         <td>
             <select name='Day' id='Day'>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
@@ -152,13 +158,11 @@ if(!isset($_SESSION['email'])){
         </td>
         <td>
             <input type='value' name='year' id='year' value="2016"/>
-            <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Update' /> 
+            <input type='submit' name='createPropertyBtn' id='createPropertyBtn' value='Create' />
         </td>
         </tr>
         </table>
-    </form>
-
-    </form>
+    </form> 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
