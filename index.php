@@ -67,12 +67,15 @@ if(isset($_POST['loginBtn'])){
 			$_SESSION['email'] = $myrow['email'];
 
             //Check if the user is an admin and set the session['admin'] to 0 or 1
-            if ($myrow['admin'] != 0)
+            if ($myrow['admin'] != 0){
                 $_SESSION['admin']=1;
+                echo $_SESSION['admin'];
+            }
+
             else
                 $_SESSION['admin']=0;
 			//Redirect the browser to the profile editing page and kill this page.
-			header("Location: /QBnB/profile.php");
+			//header("Location: /QBnB/profile.php");
 			echo "Successful Login";
 			die();
 		} else {
