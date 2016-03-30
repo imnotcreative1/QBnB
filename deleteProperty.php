@@ -6,6 +6,11 @@ if (isset($_GET['propertyAddress']) && isset($_SESSION['email'])) {
 
 $propertyAddress = $_GET['propertyAddress'];
 
+$query0 = "DELETE FROM comments WHERE address = ?";
+	$stmt = $con->prepare($query0);
+	$stmt->bind_param("s", $propertyAddress);
+	$stmt->execute();
+
 $query1 = "DELETE from booking where booking.ID in (SELECT id from availability NATURAL join property where property.address = ?);";
 	$stmt = $con->prepare($query1);
 	$stmt->bind_param("s", $propertyAddress);

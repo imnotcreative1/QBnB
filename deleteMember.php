@@ -6,6 +6,18 @@ if (isset($_GET['member']) && isset($_SESSION['email'])) {
 
 $memberEmail = $_GET['member'];
 
+$query = "DELETE from comments where address in (SELECT address from property where email = ?)";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $memberEmail);
+$stmt->execute();
+
+
+$query0 = "DELETE FROM comments WHERE email = ?";
+$stmt = $con->prepare($query0);
+$stmt->bind_param("s", $memberEmail);
+$stmt->execute();
+
+
 $query1 = "DELETE FROM booking WHERE email = ?";
 $stmt = $con->prepare($query1);
 $stmt->bind_param("s", $memberEmail);
