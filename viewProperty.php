@@ -155,6 +155,30 @@ else {
 }
 
 ?>
+<?php
+//add selected bookings
+    echo "checking time";
+    if (isset($_POST['bookBtn'])){
+        $bookingIdArray = array();
+        foreach ($_POST['checkbox'] as $checkPeriod){
+            echo "dfghj";
+            echo $checkPeriod . "\n";
+        }
+        /*include_once 'config.php';
+        $query = "INSERT into booking (id, email, booking_status)
+        Values (?, 'REQUESTED')";
+
+        $stmt= $con->prepare($query);
+        $stmt->bind_param("s", $_SESSION['email']);
+        echo "</br>" . $query . "</br>";
+        if($stmt->execute()){
+            echo "Succesfully booked";
+        }
+        else {
+            echo "Booking Failed";
+        }*/
+    }
+?>
 <!-- dynamic content will be here -->
 <nav class = "header">
   <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
@@ -245,8 +269,10 @@ else {
     <?php
         //display id, period, address
         $periodArray = array();
+        $idArray = array();
         while ($row_avail = $availResult->fetch_assoc()) {
             array_push($periodArray, ($row_avail['period']));
+            array_push($idArray, $row_avail['id']);
             //echo "<p> " . $row_avail['period'] . "</p>";
         }
     ?>
@@ -256,8 +282,8 @@ else {
             <?php
                 //$count = 0;
                 foreach ($periodArray as $p){
-
-                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value='<?php echo $p;?>' > </td> <td> ". $p . "</td></tr>";
+                    $aVal = "number";
+                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value='<?php echo \'hi\'; ?>' > </td> <td> ". $p . "</td></tr>";
                 }
             ?>
             <td> <input type='submit' name='bookBtn' id='bookBtn' value='Book!' /> </td>

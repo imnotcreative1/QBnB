@@ -13,6 +13,12 @@
  	session_start();
  	?>
 <?php
+if(!isset($_SESSION['email'])){
+	header("Location: index.php");
+    die();
+} 
+?>
+<?php
  //process the search based on the criteria
 $searchResults = "";
   //$_SESSION['email'] = "12mjs17@queensu.ca"; //This is for testing. Remove later *********************************************
@@ -80,11 +86,6 @@ $searchResults = "";
         echo "Search was successful. <br/>";
 		$searchResults = $stmt->get_result();
 	}
- 	}
- 	else {
-    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
-    header("Location: index.php");
-    die();
 }
 
  ?>

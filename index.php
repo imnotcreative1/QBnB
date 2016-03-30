@@ -107,7 +107,7 @@ if(isset($_POST['loginBtn'])){
 			//if the user creates a new user we should update the session to include their information
             //load the information so we know what to load in the profile page 
              /*$query = "SELECT email, password FROM member WHERE email=" . echo $_POST['signupEmail'] . " AND password=" . $_POST['signupPassword'] ;
- 
+
             // prepare query for execution
             if($getNewUser = $con->prepare($query)){
                 $result = $getNewUser->result();
