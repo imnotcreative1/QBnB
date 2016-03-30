@@ -42,7 +42,7 @@ if(isset($_POST['loginBtn'])){
     include_once 'config.php'; 
 	
 	// SELECT query
-        $query = "SELECT email, password FROM member WHERE email=? AND password=?";
+        $query = "SELECT email, password, admin FROM member WHERE email=? AND password=?";
  
         // prepare query for execution
         if($stmt = $con->prepare($query)){
@@ -65,6 +65,12 @@ if(isset($_POST['loginBtn'])){
 			$myrow = $result->fetch_assoc();
 			//Create a session variable that holds the user's id
 			$_SESSION['email'] = $myrow['email'];
+
+            //Check if the user is an admin and set the session['admin'] to 0 or 1
+            if ($myrow['admin'] != 0)
+                $_SESSION['admin']=1;
+            else
+                $_SESSION['admin']=0;
 			//Redirect the browser to the profile editing page and kill this page.
 			header("Location: /QBnB/profile.php");
 			echo "Successful Login";
