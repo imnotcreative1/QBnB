@@ -112,6 +112,6 @@
 </div>
 <div class="center-block container">
     <form name='deleteProfile' id='deleteProfile' action='profileInfo.php' method='post'>
-        <input type='submit' name='delPBtn' id='delPBtn' value='Cancel Membership' /> 
+        <a href="/QBnB/deleteMember.php">Cancel Membership</a>"; 
     </form>
 </div>
