@@ -202,7 +202,7 @@ if($allowedToEdit){
                 echo "<tr>
                     <td>" . $rating[$i] . "</td>
                     <td>" . $comment[$i] . "</td>";
-                if ($replies[$i] == "") {
+                if ($comment[$i] != "" && $replies[$i] == "") {
                     echo "<td> <b> Reply to Comment </b>";
                     echo "<form name='addComment' id='addComment' action='myBookingStatuses.php?propertyAddress=" . urlencode($address) . "' method='post'>
                           <textarea class=\"form-control\" rows=\"3\" name = \"input\"></textarea>                          
