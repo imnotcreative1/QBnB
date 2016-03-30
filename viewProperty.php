@@ -148,6 +148,12 @@ if($allowedToEdit){
     $commentResults = $stmt->get_result();
     echo "Comments Loaded";
 } 
+else {
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+
 ?>
 <!-- dynamic content will be here -->
 <nav class = "header">

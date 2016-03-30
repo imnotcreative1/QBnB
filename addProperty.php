@@ -16,7 +16,7 @@
  ?>
  
  <?php
- $_SESSION['email'] = "12mjs17@queensu.ca";
+ //$_SESSION['email'] = "12mjs17@queensu.ca";
  if(isset($_POST['createPropertyBtn']) && isset($_SESSION['email'])){
   // include database connection
     include_once 'config.php'; 
@@ -44,7 +44,12 @@
         }else{
             echo 'Unable to add property. Please try again. <br/>';
         }
- }
+ } else {
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+
  
  ?>
 <!-- dynamic content will be here -->

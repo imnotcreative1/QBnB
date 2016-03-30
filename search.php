@@ -15,7 +15,7 @@
 <?php
  //process the search based on the criteria
 $searchResults = "";
-  $_SESSION['email'] = "12mjs17@queensu.ca"; //This is for testing. Remove later *********************************************
+  //$_SESSION['email'] = "12mjs17@queensu.ca"; //This is for testing. Remove later *********************************************
  if(isset($_SESSION['email']) && isset($_POST['searchBtn'])){
   // include database connection
     include_once 'config.php'; 
@@ -81,6 +81,12 @@ $searchResults = "";
 		$searchResults = $stmt->get_result();
 	}
  	}
+ 	else {
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+
  ?>
 <nav class = "header">
   <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
