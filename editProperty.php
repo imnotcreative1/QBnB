@@ -105,11 +105,11 @@ if($allowedToEdit){
             $year = $_POST['Year'];
             $day = $_POST['Day'];
             $dateFormat= $year . "-" . $month . "-" . $day;
-            echo $dateFormat; 
+            //echo $dateFormat; 
             $query = "INSERT into Availability (period, address) Values (?, ?)";
             $stmt2 = $con->prepare($query);
             //echo $query;
-            echo dateToPeriod($dateFormat);
+            //echo dateToPeriod($dateFormat);
             //echo $address;
             //$aNum = 100;
             $stmt2->bind_param('is', dateToPeriod($dateFormat) ,$address);
@@ -125,26 +125,21 @@ if($allowedToEdit){
  ?>
  <?php
  //deleting an availability from a property
-    if(isset($_POST['deleteAvailBtn'])){
-            $name = $_POST['checkbox'];
-
-        if(isset($_POST['checkbox'])) {
-
-            //echo "You deleted the following availability(s): <br>";
-
-        foreach ($name as $checkbox){
-        //echo $checkbox."<br />";
-
+    if (isset($_POST['deleteAvailBtn'])){
+        if (isset($_POST['checkbox'])){
+            include_once 'config.php';
+            foreach ($_POST['checkbox'] as $checkPeriod){
+                //echo "hazaa";
+                $queryId = "DELETE from availability where period=? AND address=?";
+                $stmt = $con->prepare($queryId);
+                $stmt->bind_param("is", $checkPeriod, $address);
+                if ($stmt->execute()){
+                    header("Location: /QBnB/editProperty.php?propertyAddress=" . urlencode($address));
+                    //echo "weoo";
+                }
+            }
         }
-
-        } // end brace for if(isset
-
-        else {
-
-        //echo "You did not choose an availability.";
-
-        }
-}
+    }
 ?>
 <!-- dynamic content will be here -->
  <h2 > Edit the Property: <?php 
@@ -255,15 +250,14 @@ if($allowedToEdit){
     ?>
     <form name='checkboxes' id ='checkboxes' method='post'>
         <table>
-            <tr> <td> Delete </td> <td> Period Available </td> </tr> 
+            <tr> <td> Period Available </td> </tr> 
             <?php
-                //$count = 0;
+                $count = 0;
                 foreach ($periodArray as $p){
-
-                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value='<?php echo $p;?>' > </td> <td> ". $p . "</td></tr>";
+                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value=" . $p . " ></td> <td> ". $p . "</td></tr>";
                 }
             ?>
-            <td> <input type='submit' name='deleteAvailBtn' id='deleteAvailBtn' value='delete' /> </td>
+            <td> <input type='submit' name='deleteAvailBtn' id='deleteAvailBtn' value='Delete' /> </td>
         </table>
     </form>
 </body>

@@ -139,10 +139,10 @@ if(isset($_POST['loginBtn'])){
     </div>
     <div class = "col-md-8">
         <form  name='login' id='login' action='index.php' method='post'>
-            <div class="col-md-3"> <span style="color: #FFFFFF"> Username : </span>
+            <div class="col-md-3"> <span style="color: #FFFFFF"> Email </span>
                 <input class = "form-control" type='text' name='email' id='email' placeholder = "Email" />
             </div>
-            <div class = "col-md-3"> <span style="color: #FFFFFF"> Password : </span>
+            <div class = "col-md-3"> <span style="color: #FFFFFF"> Password </span>
                 <input class = "form-control" type='password' name='password' id='password' placeholder = "Password" />
             </div>
             <div class = "col-md-1">
