@@ -88,11 +88,9 @@ if(isset($_SESSION['email'])){
 
         //Make a query when the page loads to add the list of holdings for a user
 
-        $listHoldingQuery = "SELECT email, address, price, count(*) as 
-        \"NoBookings\" from availability natural join property 
-        natural join (select id from booking) as T group by address";
+        $listPropertiesQuery = "SELECT address, email from property";
 
-        $stmt3 = $con->prepare($listHoldingQuery);
+        $stmt3 = $con->prepare($listPropertiesQuery);
 
         $stmt3->execute();
 
@@ -142,29 +140,25 @@ if(isset($_SESSION['email'])){
 <div class="col-md-4" id = "profileMidCol">
        <h3 class = "MidHeader"> All properties </h3>
         <?php
-            $priceArray = array();
             $addressArray = array();
-            $bookingArray = array();
+            $emailArray = array();
             while ($row_users = $result3->fetch_assoc()) {
-                array_push($priceArray, ($row_users['price']));
+                array_push($emailArray, ($row_users['email']));
                 array_push($addressArray, ($row_users['address']));
-                array_push($bookingArray, ($row_users['NoBookings']));
             }  
         ?>
         <table class="table table-striped">
             <tr> 
                 <th> Address </th>
-                <th> Price </th>
-                <th> No. Bookings </th>
+                <th> Email </th>
                 <th> Options </th>
             </tr>
             <?php   
-                for ($i = 0; $i < sizeof($priceArray) ; $i++){
+                for ($i = 0; $i < sizeof($addressArray) ; $i++){
                     echo "<tr>";
                     echo "<td> " . $addressArray[$i] . "</td>";
-                    echo "<td> " . $priceArray[$i] . "</td>";
-                    echo "<td> " . $bookingArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/edit.php?=" . $addressArray[$i] . "\">Edit</a></td>";
+                    echo "<td> " . $emailArray[$i] . "</td>";
+                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?=" . $addressArray[$i] . "\">view</a></td>";
                     echo "</tr>";
                 }
             ?>
