@@ -92,7 +92,7 @@
     </h2>
     </div>
     <div class="col-md-2">
-    <form method='GET' action="/QBnB/profileInfo.php"><input style="width: 8em;height:3em;" type='submit' name='profileInfoBtn' id='profileInfoBtn' value='Profile Info' /></form>
+    <form method='GET' action="/QBnB/profileInfo.php"><input style="width: 8em;height:3em;" type='submit' name='profileInfoBtn' id='profileInfoBtn' value='Edit Profile' /></form>
     </div>
     <div class="container-fluid">
         <div class="col-md-6" class = "profileMidCol">
