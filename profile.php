@@ -119,7 +119,7 @@
     <?php echo $myrow['email']; ?>, 
     <a href="index.php?logout=1">Log Out</a><br/>
     </h2>
-    <div class="col-md-4">
+    <div class="col-md-2">
     <h3 class = "PinfoHead"> Your Profile Information </h3>
     <form name='editProfile' id='editProfile' action='profile.php' method='post'>
         <table border='0'>
@@ -148,7 +148,7 @@
         </table>
     </form>
     </div>
-    <div class="col-md-4" id = "profileMidCol">
+    <div class="col-md-5" id = "profileMidCol">
     <h3 class = "myBookingHeader"> List of Your Bookings </h3>
     <?php
         //display id, period, address
@@ -208,24 +208,25 @@
                 <th> No. Bookings </th>
                 <th> Average Rating </th>
                 <th> Options </th>
+                <th></th>
             </tr>
             <?php   
                 for ($i = 0; $i < sizeof($priceArray) ; $i++){
-                    echo $ratingArray[$i];
                     echo "<tr>";
                     echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i] . "</td>";
                     echo "<td> " . $priceArray[$i] . "</td>";
                     echo "<td> " . $bookingArray[$i] . "</td>";
-                    if (is_null($ratingArray[$i])) echo "<td> N/A </td>";
+                    if (is_null($ratingArray[$i])) echo "<td> No ratings </td>";
                     else echo "<td> " . $ratingArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/edit.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> | <form method='delete'><input type='submit' name='deletePropertyBtn' id='deletePropertyBtn' value='Delete' /></form></td>";
+                    echo "<td> <a href=\"/QBnB/edit.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> </td>";
+                    echo "<td><form method='delete'><input type='submit' name='deletePropertyBtn' id='deletePropertyBtn' value='Delete' /></form></td>";
                     echo "</tr>";
                 }
             ?>
         </table>
 
     </div>
-    <div class="col-md-4"> 
+    <div class="col-md-5"> 
     <ul> 
         <li> Add Booking Button </li>
         <li> Remove Booking Button </li>

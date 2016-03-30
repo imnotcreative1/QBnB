@@ -41,38 +41,39 @@ if($allowedToEdit){
         echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
     }
-
 } 
- ?>
+?>
+
  <?php
  //Loads the features for the property
- $searchResults = "";
- if($allowedToEdit){
-    include_once 'config.php';
-    $query = "SELECT property.address, price, district_name, rooms, type 
-        FROM property
-        INNER JOIN Features
-        ON property.address = Features.address
-        WHERE property.address = ?";
-    $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
-    //$stmt->bind_param("s", $address);//Uncomment this after testing
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $num = $result->num_rows;
-    if ($num > 0){
-        echo "Property Loaded";
-        $searchResults = $result->fetch_assoc();
+     $searchResults = "";
+     if($allowedToEdit){
+        include_once 'config.php';
+        $query = "SELECT property.address, price, district_name, rooms, type 
+            FROM property
+            INNER JOIN Features
+            ON property.address = Features.address
+            WHERE property.address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        //$stmt->bind_param("s", $address);//Uncomment this after testing
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $num = $result->num_rows;
+        if ($num > 0){
+            echo "Property Loaded";
+            $searchResults = $result->fetch_assoc();
 
-    }
-    else {
-        echo "Property Failed to Load";
-        //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
-    }
+        }
+        else {
+            echo "Property Failed to Load";
+            //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
+        }
 
-} 
- ?>
- <?php 
+    } 
+?>
+
+<?php 
     //Load all availibilites for the property
     $availResult;
     if($allowedToEdit){
@@ -93,8 +94,9 @@ if($allowedToEdit){
             echo "Failed to load availibilites";
         }
     }
- ?>
- <?php 
+?>
+
+<?php 
  //add availabiltiy to a property
     if(isset($_POST['addAvailBtn'])){
         include_once 'config.php';
@@ -110,7 +112,8 @@ if($allowedToEdit){
             echo "Unable to add availability";
         }
     }
- ?>
+?>
+
  <?php
  //deleting an availability from a property
     if(isset($_POST['deleteAvailBtn'])){

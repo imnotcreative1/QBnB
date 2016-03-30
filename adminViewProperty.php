@@ -10,18 +10,18 @@
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
 <body>
- <?php
-  //Create a user session or resume an existing one
- session_start();
- ?>
+<?php
+    //Create a user session or resume an existing one
+    session_start();
+?>
 
- <?php
- //grabs property information
- $address = urldecode($_GET['propertyAddress']);
+<?php
+    //grabs property information
+    $address = urldecode($_GET['propertyAddress']);
 
- $allowedToEdit = ($_SESSION['admin']); //Add functionality to compare the email with the property to be edited
+    $allowedToEdit = ($_SESSION['admin']); //Add functionality to compare the email with the property to be edited
 
-if($allowedToEdit){
+    if($allowedToEdit){
     include_once 'config.php';
     //query property details
     $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
@@ -60,12 +60,13 @@ if($allowedToEdit){
     $result = $stmt->get_result();
     $comments = $result;
 
-} 
- ?>
- <?php
- //Loads the features for the property
- $searchResults = "";
- if($allowedToEdit){
+    } 
+?>
+
+<?php
+    //Loads the features for the property
+    $searchResults = "";
+    if($allowedToEdit){
     include_once 'config.php';
     $query = "SELECT property.address, price, district_name, rooms, type 
         FROM property
@@ -79,8 +80,6 @@ if($allowedToEdit){
     $result = $stmt->get_result();
     $num = $result->num_rows;
 
-
-
     if ($num > 0){
         echo "Property Loaded";
         $searchResults = $result;
@@ -90,10 +89,10 @@ if($allowedToEdit){
         echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
     }
+    } 
+?>
 
-} 
- ?>
- <?php 
+<?php 
     //Load all availibilites for the property
     $availResult;
     if($allowedToEdit){
@@ -114,9 +113,10 @@ if($allowedToEdit){
             echo "Failed to load availibilites";
         }
     }
- ?>
- <?php 
- //add availabiltiy to a property
+?>
+
+<?php 
+    //add availabiltiy to a property
     if(isset($_POST['addAvailBtn'])){
         include_once 'config.php';
         $query = "INSERT into availability (period, address) values (101, ?)"; //after testing add period calculation *****************
@@ -131,9 +131,10 @@ if($allowedToEdit){
             echo "Unable to add availability";
         }
     }
- ?>
- <?php
- //deleting an availability from a property
+?>
+
+<?php
+    //deleting an availability from a property
     if(isset($_POST['deleteAvailBtn'])){
             $name = $_POST['checkbox'];
 
@@ -153,29 +154,30 @@ if($allowedToEdit){
         echo "You did not choose an availability.";
 
         }
-}
+    }
 ?>
-<?php
-//load all the comments about the property on the page
-if($allowedToEdit){
-    include_once 'config.php';
-    $query = "SELECT  * 
-        FROM  Comments
-        WHERE address = ?";
-    $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
-    //$stmt->bind_param("s", $address);//Uncomment this after testing
-    $stmt->execute();
-    $commentResults = $stmt->get_result();
-    echo "Comments Loaded";
-} 
-else {
-    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
-    header("Location: index.php");
-    die();
-}
 
+<?php
+    //load all the comments about the property on the page
+    if($allowedToEdit){
+        include_once 'config.php';
+        $query = "SELECT  * 
+            FROM  Comments
+            WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        //$stmt->bind_param("s", $address);//Uncomment this after testing
+        $stmt->execute();
+        $commentResults = $stmt->get_result();
+        echo "Comments Loaded";
+    } 
+    else {
+        //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+        header("Location: index.php");
+        die();
+    }
 ?>
+
 <!-- dynamic content will be here -->
 <nav class = "header">
   <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
