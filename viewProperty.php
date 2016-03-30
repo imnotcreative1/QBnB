@@ -331,19 +331,10 @@ if(isset($_POST['replyBtn'])){
                     <col width = \"40%\">
                     <th> Rating </th>
                     <th> Comment </th>";
-                    if ($_SESSION['email'] == $property_owner['email']) echo "<th> Reply </th>";
             for ($i = 0; $i < count($rating); $i++){  
                 echo "<tr>
                     <td>" . $rating[$i] . "</td>
                     <td>" . $comment[$i] . "</td>";
-                if ($replies[$i] == "") {
-                    echo "<td> <b> Reply to Comment </b>";
-                    echo "<form name='addComment' id='addComment' action='viewProperty.php?propertyAddress=" . urlencode($address) . "' method='post'>
-                          <textarea class=\"form-control\" rows=\"3\" name = \"input\"></textarea>                          <input class=\"btn btn-primary\" type='submit' id='replyBtn' name='replyBtn' value='Reply to Comment'/> 
-                          </form> </td>";
-                } else {       
-                    echo "<td>" . $replies[$i] . "</td>";
-                }   
                 echo "</tr>";
             }
             echo "</table>";
