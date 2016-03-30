@@ -169,13 +169,27 @@ else {
             //echo "{" . $checkPeriod. "}" . "\n";
             array_push($bookingIdArray, $checkPeriod);
             $idArray = array();
-            $queryId = "SELECT id, email from availability
+            $queryId = "SELECT availability.id, email, property.address 
+                from availability 
+                inner join property on availability.address = property.address                
                 where availability.period = ? AND availability.address = ?";
             $stmt = $con->prepare($queryId);
             $stmt->bind_param("is", $checkPeriod, $address);
             if ($stmt->execute()){
-                
-                echo "booked a period </br>";
+                echo "found booking info </br>";
+                $bookResults=$stmt->get_result();
+                $bookR=$bookResults->fetch_assoc();
+                $insertBooking = "INSERT into booking Values (?, ?, 'REQUESTED');";
+                $stmt2 = $con->prepare($insertBooking);
+                echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
+                $stmt2->bind_param("is", $bookR['id'], $bookR['email']);
+                if ($stmt2->execute()){
+                    echo "</br> booked it! </br>";
+
+                }
+                else {
+                    echo "</br>failed to book</br>";
+                }
             }
             else {
                 echo "shit</br>";
