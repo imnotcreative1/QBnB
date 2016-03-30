@@ -17,7 +17,7 @@
 
  <?php
  $address = $_GET['propertyAddress'];
- echo $address;
+ //echo $address;
  //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
  //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
  $allowedToEdit = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
@@ -32,12 +32,12 @@ if($allowedToEdit){
     $result = $stmt->get_result();
     $num = $result->num_rows;
     if ($num > 0){
-        echo "Property Loaded";
+        //echo "Property Loaded";
         $myrow = $result->fetch_assoc();
 
     }
     else {
-        echo "Property Failed to Load";
+        //echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
     }
 
@@ -62,11 +62,11 @@ if($allowedToEdit){
     $stmt->bind_param('ssisis',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"]);
     // Execute the query
         if($stmt->execute()){
-            echo "Property was updated. <br/>";
+            //echo "Property was updated. <br/>";
             $currentPageURL = $_SERVER['REQUEST_URI'];
             //header("Location: /QBnB/editProperty.php" . ); 
         }else{
-            echo 'Unable to update record. Please try again. <br/>';
+            //echo 'Unable to update record. Please try again. <br/>';
         }
  }
  ?>
@@ -81,14 +81,14 @@ if($allowedToEdit){
         if($stmt->execute()){
             $availResult = $stmt->get_result();
             if ($availResult->num_rows > 0){
-                echo "Loaded Availibilities...";
+                //echo "Loaded Availibilities...";
             }
             else {
-                echo "Failed to load availibilites";
+               // echo "Failed to load availibilites";
             }
         }
         else {
-            echo "Failed to load availibilites";
+            //echo "Failed to load availibilites";
         }
     }
  ?>
@@ -102,10 +102,10 @@ if($allowedToEdit){
         $stmt->bind_param('s', $address);
 
         if($stmt->execute()){
-            echo "availability was added";
+            //echo "availability was added";
         }
         else {
-            echo "Unable to add availability";
+            //echo "Unable to add availability";
         }
     }
  ?>
@@ -116,10 +116,10 @@ if($allowedToEdit){
 
         if(isset($_POST['checkbox'])) {
 
-            echo "You deleted the following availability(s): <br>";
+            //echo "You deleted the following availability(s): <br>";
 
         foreach ($name as $checkbox){
-        echo $checkbox."<br />";
+        //echo $checkbox."<br />";
 
         }
 
@@ -127,7 +127,7 @@ if($allowedToEdit){
 
         else {
 
-        echo "You did not choose an availability.";
+        //echo "You did not choose an availability.";
 
         }
 }
@@ -143,9 +143,9 @@ if($allowedToEdit){
 </nav>
 
  <h2 > Edit the Property: <?php 
-    echo $address?>
+    //echo $address?>
 </h2>
-    <?php echo $currentPageURL; ?>
+    <?php //echo $currentPageURL; ?>
     <form name='newProperty' id='newProperty' method='post'>
         <table border='0'>
             <tr>

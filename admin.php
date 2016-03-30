@@ -9,17 +9,6 @@
         <!-- Bootstrap Vertical Nav -->
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
-
-
-<ul class = "header">
-  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
-  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-</ul>
-
 <body>
  <?php
   //Create a user session or resume an existing one
@@ -38,9 +27,9 @@
     $stmt->bind_param('ssss', $_POST['password'], $_POST['phone_num'], $_POST['gradYear'], $_SESSION['email']);
     // Execute the query
         if($stmt->execute()){
-            echo "Record was updated. <br/>";
+            //echo "Record was updated. <br/>";
         }else{
-            echo 'Unable to update record. Please try again. <br/>';
+            //echo 'Unable to update record. Please try again. <br/>';
         }
  }
  
@@ -48,7 +37,7 @@
 
 <?php
 if (isset($_DELETE['deletePropertyBtn']) && isset($_SESSION['email'])){
-    echo "Deleting";
+    //echo "Deleting";
 }
 ?>
 
@@ -104,9 +93,16 @@ if(isset($_SESSION['email'])){
 
 ?>
 <!-- dynamic content will be here -->
+<ul class = "header">
+  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
+  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
+</ul>
  <h2 class = "greeting"> Admin profile page 
-    <?php echo $myrow['email']; ?>, 
-    <a href="index.php?logout=1">Log Out</a><br/>
+    <?php echo $myrow['email']; ?>
 </h2>
  <div class="col-md-4">
     <h3 class = "PinfoHead"> Your Profile Information </h3>

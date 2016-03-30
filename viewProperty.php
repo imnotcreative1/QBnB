@@ -18,7 +18,7 @@
  <?php
  //grabs property information
  $address = urldecode($_GET['propertyAddress']);
- echo "address is " . $address;
+ //echo "address is " . $address;
  //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
  //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
  $allowedToEdit = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
@@ -33,12 +33,12 @@ if($allowedToEdit){
     $result = $stmt->get_result();
     $num = $result->num_rows;
     if ($num > 0){
-        echo "Property Loaded";
+        //echo "Property Loaded";
         $myrow = $result->fetch_assoc();
 
     }
     else {
-        echo "Property Failed to Load";
+        //echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
     }
 } 
@@ -61,12 +61,12 @@ if($allowedToEdit){
         $result = $stmt->get_result();
         $num = $result->num_rows;
         if ($num > 0){
-            echo "Property Loaded";
+            //echo "Property Loaded";
             $searchResults = $result->fetch_assoc();
 
         }
         else {
-            echo "Property Failed to Load";
+            //echo "Property Failed to Load";
             //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
         }
 
@@ -84,14 +84,14 @@ if($allowedToEdit){
         if($stmt->execute()){
             $availResult = $stmt->get_result();
             if ($availResult->num_rows > 0){
-                echo "Loaded Availibilities...";
+                //echo "Loaded Availibilities...";
             }
             else {
-                echo "Failed to load availibilites";
+                //echo "Failed to load availibilites";
             }
         }
         else {
-            echo "Failed to load availibilites";
+            //echo "Failed to load availibilites";
         }
     }
 ?>
@@ -106,10 +106,10 @@ if($allowedToEdit){
         $stmt->bind_param('s', $address);
 
         if($stmt->execute()){
-            echo "availability was added";
+            //echo "availability was added";
         }
         else {
-            echo "Unable to add availability";
+            //echo "Unable to add availability";
         }
     }
 ?>
@@ -121,10 +121,10 @@ if($allowedToEdit){
 
         if(isset($_POST['checkbox'])) {
 
-            echo "You deleted the following availability(s): <br>";
+            //echo "You deleted the following availability(s): <br>";
 
         foreach ($name as $checkbox){
-        echo $checkbox."<br />";
+        //echo $checkbox."<br />";
 
         }
 
@@ -132,7 +132,7 @@ if($allowedToEdit){
 
         else {
 
-        echo "You did not choose an availability.";
+        //echo "You did not choose an availability.";
 
         }
 }
@@ -149,7 +149,7 @@ if($allowedToEdit){
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $commentResults = $stmt->get_result();
-    echo "Comments Loaded";
+    //echo "Comments Loaded";
 } 
 else {
     //User is not logged in. Redirect the browser to the login index.php page and kill this page.
@@ -160,7 +160,7 @@ else {
 ?>
 <?php
 //add selected bookings
-    echo "checking time";
+    //echo "checking time";
     if (isset($_POST['bookBtn'])){
         $bookingIdArray = array();
         include_once 'config.php';
@@ -176,7 +176,7 @@ else {
             $stmt = $con->prepare($queryId);
             $stmt->bind_param("is", $checkPeriod, $address);
             if ($stmt->execute()){
-                echo "found booking info </br>";
+                //echo "found booking info </br>";
                 $bookResults=$stmt->get_result();
                 $bookR=$bookResults->fetch_assoc();
                 $insertBooking = "INSERT into booking Values (?, ?, 'REQUESTED');";
@@ -184,15 +184,15 @@ else {
                 echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
                 $stmt2->bind_param("is", $bookR['id'], $bookR['email']);
                 if ($stmt2->execute()){
-                    echo "</br> booked it! </br>";
+                    //echo "</br> booked it! </br>";
 
                 }
                 else {
-                    echo "</br>failed to book</br>";
+                    //echo "</br>failed to book</br>";
                 }
             }
             else {
-                echo "shit</br>";
+                //echo "sht</br>";
             }
         }
         /*$query = "INSERT into booking (id, email, booking_status)

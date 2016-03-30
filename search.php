@@ -47,15 +47,15 @@ $searchResults = "";
 
     $dCond = $_POST['district_name'];
     $tCond =  $_POST['type'];
-    echo $dCond . "\n";
-    echo $tCond . "\n";
+    //echo $dCond . "\n";
+    //echo $tCond . "\n";
     //Inititalize Variables
     $query = "";
     $stmt = "";
 
     if ($dCond === "Any" && $tCond === "Any") {
     	$query = "SELECT * FROM Property Where " . $whereAddress . " AND  " . $whereMinPrice . " AND " . $whereMaxPrice . " AND " . $whereRooms;
-	 	echo $query;
+	 	//echo $query;
 	    $stmt = $con->prepare($query);  
 	    $stmt->bind_param('siii',  $_POST['address'], $_POST['minPrice'], $_POST['maxPrice'], $_POST["rooms"]);
 	}
@@ -69,7 +69,7 @@ $searchResults = "";
 	else if ($dCond != "Any"){
 		$query = "SELECT * FROM Property Where " . $whereAddress . " AND  " . $whereMinPrice . " AND " . $whereMaxPrice . " AND " . $whereDistrict
 		. " AND " . $whereRooms;
-		echo "here";
+		//echo "here";
 	 	//echo $query;
 	    $stmt = $con->prepare($query);  
 	    $stmt->bind_param('siisi',  $_POST['address'], $_POST['minPrice'], $_POST['maxPrice'], $_POST["district_name"], $_POST["rooms"]);
@@ -83,7 +83,7 @@ $searchResults = "";
 	}
 	// Execute the query
     if($stmt->execute()){
-        echo "Search was successful. <br/>";
+        //echo "Search was successful. <br/>";
 		$searchResults = $stmt->get_result();
 	}
 }

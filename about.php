@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head> 
-		<tile> QBnB </title>
+		<title> QBnB </title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
 
         <!-- Bootstrap Vertical Nav -->

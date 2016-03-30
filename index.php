@@ -69,7 +69,7 @@ if(isset($_POST['loginBtn'])){
             //Check if the user is an admin and set the session['admin'] to 0 or 1
             if ($myrow['admin'] != 0){
                 $_SESSION['admin']=1;
-                echo $_SESSION['admin'];
+                //echo $_SESSION['admin'];
             }
 
             else
@@ -77,15 +77,15 @@ if(isset($_POST['loginBtn'])){
                 header("Location: /QBnB/profile.php");
 			//Redirect the browser to the profile editing page and kill this page.
 			//header("Location: /QBnB/profile.php");
-			echo "Successful Login";
+			//echo "Successful Login";
 			die();
 		} else {
 			//If the username/password doesn't matche a user in our database
 			// Display an error message and the login form
-			echo "Failed to login";
+			//echo "Failed to login";
 		}
 		} else {
-			echo "failed to prepare the SQL";
+			//echo "failed to prepare the SQL";
 		}
  }
  if(isset($_POST['signupBtn'])){
@@ -119,16 +119,16 @@ if(isset($_POST['loginBtn'])){
                 $_SESSION['email'] = $newUserInfo['email'];*/
                 $_SESSION['email'] = $_POST['signupEmail'];
     			header("Location: /QBnB/profile.php");
-    			echo "user successfully created";
+    			//echo "user successfully created";
     			die();
             //}
 		} else {
 			//If the username/password doesn't matche a user in our database
 			// Display an error message and the login form
-			echo "Failed to create user";
+			//echo "Failed to create user";
 		}
 		} else {
-			echo "failed to prepare the SQL";
+			//echo "failed to prepare the SQL";
 		}
  }
  

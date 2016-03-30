@@ -36,11 +36,11 @@ if(!isset($_SESSION['email'])){
     $stmt->bind_param('ssisis',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"]);
     // Execute the query
         if($stmt->execute()){
-            echo "Property was added. <br/>";
+            //echo "Property was added. <br/>";
             $query = "INSERT into Availability (period, address) Values (15, ?)";
             $stmt2 = $con->prepare($query);
-            echo $query;
-            echo $_POST['address'];
+            //echo $query;
+            //echo $_POST['address'];
             //$aNum = 100;
             $stmt2->bind_param('s', $_POST['address']);
             if ($stmt2->execute()){
@@ -48,10 +48,10 @@ if(!isset($_SESSION['email'])){
                 //echo "Availability was added. <br/>";
             }
             else {
-                echo "Availability was not added. <br/>";
+                //echo "Availability was not added. <br/>";
             }
         }else{
-            echo 'Unable to add property. Please try again. <br/>';
+            //echo 'Unable to add property. Please try again. <br/>';
         }
  }
 
