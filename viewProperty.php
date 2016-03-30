@@ -172,7 +172,7 @@ else {
                 $bookR=$bookResults->fetch_assoc();
                 $insertBooking = "INSERT into booking Values (?, ?, 'REQUESTED');";
                 $stmt2 = $con->prepare($insertBooking);
-                echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
+                //echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
                 $stmt2->bind_param("is", $bookR['id'], $bookR['email']);
                 if ($stmt2->execute()){
                     //echo "</br> booked it! </br>";
