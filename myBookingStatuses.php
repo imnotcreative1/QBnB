@@ -17,6 +17,71 @@
  ?>
 
  <?php
+    //grabs property information
+    $address = urldecode($_GET['propertyAddress']);
+    //echo "address is " . $address;
+    //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
+    //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
+    $allowedToView = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
+    //Loading the property to be edited
+    if($allowedToView){
+        include_once 'config.php';
+
+        $query = "SELECT email FROM property WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $property_owner = $result->fetch_assoc();
+
+        $query = "SELECT  * 
+            FROM  Comments
+            WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        //$stmt->bind_param("s", $address);//Uncomment this after testing
+        $stmt->execute();
+        $commentResults = $stmt->get_result();
+    
+
+        $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        //$stmt->bind_param("s", $address);//Uncomment this after testing
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $property_info = $result->fetch_assoc();
+        
+        $query = "SELECT private_bath, shared_bath, close_to_subway, pool, full_kitchen, laundry FROM features WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $property_features = $result->fetch_assoc();
+
+        $query = "SELECT email FROM availability NATURAL JOIN booking WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $commenters = $result->fetch_assoc();
+    } 
+?>
+
+
+<?php
+if(isset($_POST['replyBtn'])){
+    include_once 'config.php';
+
+    $query = "UPDATE comments set reply=? where address = ? and email = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('sss', $_POST['input'], $address, $_POST['commentOwner']);
+    $stmt->execute();
+}
+?>
+
+
+ <?php
  //grabs property information
  $address = urldecode($_GET['propertyAddress']);
  
@@ -112,6 +177,47 @@ if($allowedToEdit){
         }
     }
 
+    ?>
+
+    <?php
+    if ($commentResults != ""){
+            $rating = array();
+            $comment = array();
+            $replies = array();
+            $commenter = array();
+            while ($row_results = $commentResults->fetch_assoc()) {
+                array_push($rating, ($row_results['property_rating']));
+                array_push($comment, ($row_results['comment']));
+                array_push($replies, ($row_results['reply']));
+                array_push($commenter, ($row_results['email']));
+            }
+            echo "<table class = \"table table-bordered table-striped\">
+                    <col width = \"10%\">
+                    <col width = \"40%\">
+                    <col width = \"40%\">
+                    <th> Rating </th>
+                    <th> Comment </th>";
+                    if ($_SESSION['email'] == $property_owner['email']) echo "<th> Reply </th>";
+            for ($i = 0; $i < count($rating); $i++){  
+                echo "<tr>
+                    <td>" . $rating[$i] . "</td>
+                    <td>" . $comment[$i] . "</td>";
+                if ($replies[$i] == "") {
+                    echo "<td> <b> Reply to Comment </b>";
+                    echo "<form name='addComment' id='addComment' action='myBookingStatuses.php?propertyAddress=" . urlencode($address) . "' method='post'>
+                          <textarea class=\"form-control\" rows=\"3\" name = \"input\"></textarea>                          
+                          <textarea name = \"commentOwner\" style = \"display:none;\">" .$commenter[$i]. "</textarea>
+                          <input class=\"btn btn-primary\" type='submit' id='replyBtn' name='replyBtn' value='Reply to Comment'/> 
+                          </form> </td>";
+                } else {       
+                    echo "<td>" . $replies[$i] . "</td>";
+                }   
+                echo "</tr>";
+            }
+            echo "</table>";
+    } else {
+        echo "<h2> You have no comments! </h2>";
+    }
 ?>
    
 </body>
