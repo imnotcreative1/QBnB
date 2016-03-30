@@ -35,10 +35,12 @@ if(!isset($_SESSION['email'])){
     $stmt->bind_param('ssisis',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"]);
     // Execute the query
         if($stmt->execute()){
+            //echo "we made it";
            include_once 'datePeriodConversion.php';
             $month = $_POST['Month'];
             $year = $_POST['Year'];
             $day = $_POST['Day'];
+            $address = $_POST['address'];
             $dateFormat= $year . "-" . $month . "-" . $day;
             echo $dateFormat; 
             $query = "INSERT into Availability (period, address) Values (?, ?)";
