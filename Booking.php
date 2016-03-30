@@ -1,25 +1,14 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Admin page</title>
+        <title>Welcome to QBnB</title>
         <!-- jQuery first, then Bootstrap JS. -->
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"-->
 
         <!-- Bootstrap Vertical Nav -->
-        <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
+        <!--link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css"-->
     </head>
-
-
-<ul class = "header">
-  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
-  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-</ul>
-
 <body>
  <?php
   //Create a user session or resume an existing one
@@ -45,13 +34,7 @@
  }
  
  ?>
-
-<?php
-//    if (isset($_GET['editProperty']) && isset){
-
-  //  }
-?>
-
+ 
  <?php
 if(isset($_SESSION['email'])){
    // include database connection
@@ -77,9 +60,12 @@ if(isset($_SESSION['email'])){
 
         //Make another query when the pages loads to add the list of bookings for a user
 
-        $listMembersQuery = "SELECT name, email from member";
+        $listBookingsQuery = "SELECT * from booking
+        JOIN availability on booking.id = availability.id
+        WHERE booking.email = ?";
 
-        $stmt2 = $con->prepare($listMembersQuery);
+        $stmt2 = $con->prepare($listBookingsQuery);
+        $stmt2->bind_Param("s", $_SESSION['email']);
 
         $stmt2->execute();
 
@@ -88,9 +74,13 @@ if(isset($_SESSION['email'])){
 
         //Make a query when the page loads to add the list of holdings for a user
 
-        $listPropertiesQuery = "SELECT address, email from property";
+        $listHoldingQuery = "SELECT * FROM property
+        JOIN features on property.address = features.address
+        WHERE email = ?";
 
-        $stmt3 = $con->prepare($listPropertiesQuery);
+        $stmt3 = $con->prepare($query);
+
+        $stmt3->bind_Param("s", $_SESSION['email']);
 
         $stmt3->execute();
 
@@ -104,7 +94,14 @@ if(isset($_SESSION['email'])){
 
 ?>
 <!-- dynamic content will be here -->
- <h2 class = "greeting"> Admin profile page 
+<ul class = "header">
+  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+</ul>
+
+ <h2 class = "greeting"> Welcome  
     <?php echo $myrow['email']; ?>, 
     <a href="index.php?logout=1">Log Out</a><br/>
 </h2>
@@ -138,59 +135,91 @@ if(isset($_SESSION['email'])){
     </form>
 </div>
 <div class="col-md-4" id = "profileMidCol">
-       <h3 class = "MidHeader"> All properties </h3>
+    <h3 class = "myBookingHeader"> List of Your Bookings </h3>
+    <?php
+        //display id, period, address
+        $idArray = array();
+        $periodArray = array();
+        $addressArray = array();
+        while ($row_users = $result2->fetch_assoc()) {
+            array_push($idArray, ($row_users['id']));
+            array_push($periodArray, ($row_users['period']));
+            array_push($addressArray, ($row_users['address']));
+        }  
+    ?>
+        <div class="col-md-4"> Id 
+            <?php 
+                foreach($idArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> Period
+            <?php 
+                foreach($periodArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> Address
+            <?php 
+                foreach($addressArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <h3> List of Your Holdings </h3>
         <?php
+            $idArray = array();
+            $priceArray = array();
             $addressArray = array();
-            $emailArray = array();
             while ($row_users = $result3->fetch_assoc()) {
-                array_push($emailArray, ($row_users['email']));
+                array_push($priceArray, ($row_users['price']));
+                array_push($districtArray, ($row_users['district_name']));
                 array_push($addressArray, ($row_users['address']));
             }  
         ?>
-        <table class="table table-striped">
-            <tr> 
-                <th> Address </th>
-                <th> Email </th>
-                <th> Options </th>
-            </tr>
-            <?php   
-                for ($i = 0; $i < sizeof($addressArray) ; $i++){
-                    echo "<tr>";
-                    echo "<td> " . $addressArray[$i] . "</td>";
-                    echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?=" . $addressArray[$i] . "\">view</a></td>";
-                    echo "</tr>";
+        <div class="col-md-4"> Address
+            <?php 
+                foreach($addressArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
                 }
             ?>
-        </table>
+
+        </div>
+        <div class="col-md-4"> Price
+            <?php 
+                foreach($priceArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
+        <div class="col-md-4"> District
+            <?php 
+                foreach($districtArray as $i){
+                    echo "<p> </p>";
+                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
+                }
+            ?>
+
+        </div>
 
 </div>
-<div class="col-md-4" id = "Members_LeftCol"> 
-    <h3 class = "LeftHeader"> All Members </h3>
-        <?php
-            $nameArray = array();
-            $emailArray = array();
-            while ($row_users = $result2->fetch_assoc()) {
-                array_push($nameArray, ($row_users['name']));
-                array_push($emailArray, ($row_users['email']));
-            }  
-        ?>
-        <table class="table table-striped">
-            <tr> 
-                <th> Name </th>
-                <th> Email </th>
-                <th> Options </th>
-            </tr>
-            <?php   
-                for ($i = 0; $i < sizeof($nameArray) ; $i++){
-                    echo "<tr>";
-                    echo "<td> " . $nameArray[$i] . "</td>";
-                    echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/veiwember.php?member=" . $emailArray[$i] . "\">view</a></td>";
-                    echo "</tr>";
-                }
-            ?>
-        </table>
+<div class="col-md-4"> 
+    <ul> 
+        <li> Add Booking Button </li>
+        <li> Remove Booking Button </li>
+        <li> View Comments </li>
+    </ul>
 </div> 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
