@@ -161,6 +161,7 @@ if(isset($_POST['replyBtn'])){
                 inner join property on availability.address = property.address                
                 where availability.period = ? AND availability.address = ?";
             $stmt = $con->prepare($queryId);
+            //echo $checkPeriod;
             $stmt->bind_param("is", $checkPeriod, $address);
             if ($stmt->execute()){
                 //echo "found booking info </br>";
@@ -168,6 +169,7 @@ if(isset($_POST['replyBtn'])){
                 $bookR=$bookResults->fetch_assoc();
                 $insertBooking = "INSERT into booking Values (?, ?, 'REQUESTED');";
                 $stmt2 = $con->prepare($insertBooking);
+                //echo $bookR['id'] . " " . $bookR['email'];
                 //echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
                 $stmt2->bind_param("is", $bookR['id'], $bookR['email']);
                 if ($stmt2->execute()){
