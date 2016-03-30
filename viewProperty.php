@@ -26,32 +26,36 @@
     //Loading the property to be edited
     if($allowedToView){
         include_once 'config.php';
-        $query0 = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
-        $stmt = $con->prepare($query0);
+
+        $query = "SELECT email FROM property WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $property_owner = $result->fetch_assoc();
+    
+
+        $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
+        $stmt = $con->prepare($query);
         $stmt->bind_param("s", $address);
         //$stmt->bind_param("s", $address);//Uncomment this after testing
         $stmt->execute();
         $result = $stmt->get_result();
-        $num = $result->num_rows;
-        if ($num > 0){
-            //echo "Property Loaded";
-            $property_info = $result->fetch_assoc();
-            $query1 = "SELECT private_bath, shared_bath, close_to_subway, pool, full_kitchen, laundry FROM features WHERE address = ?";
-            $stmt = $con->prepare($query1);
-            $stmt->bind_param("s", $address);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $num = $result->num_rows;
-            if ($num > 0){
-                $property_features = $result->fetch_assoc();
-            } else {
-                //echo "Property Features Failed to Load";
-                //header("Location: /QBnB/profile.php");
-            }
-        } else {
-        //echo "Property Failed to Load";
-        //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
-        }
+        $property_info = $result->fetch_assoc();
+        
+        $query = "SELECT private_bath, shared_bath, close_to_subway, pool, full_kitchen, laundry FROM features WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $property_features = $result->fetch_assoc();
+
+        $query = "SELECT email FROM availability NATURAL JOIN booking WHERE address = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("s", $address);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $commenters = $result->fetch_assoc();
     } 
 ?>
 
@@ -97,48 +101,6 @@
     }
 ?>
 
-<?php 
-    //add availabiltiy to a property
-    if(isset($_POST['addAvailBtn'])){
-        include_once 'config.php';
-        $query = "INSERT into availability (period, address) values (101, ?)"; //after testing add period calculation *****************
-
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('s', $address);
-
-        if($stmt->execute()){
-            //echo "availability was added";
-        }
-        else {
-            //echo "Unable to add availability";
-        }
-    }
-?>
-
-<?php
-    //deleting an availability from a property
-    if(isset($_POST['deleteAvailBtn'])){
-        $name = $_POST['checkbox'];
-
-    if(isset($_POST['checkbox'])) {
-
-        //echo "You deleted the following availability(s): <br>";
-
-    foreach ($name as $checkbox){
-    //echo $checkbox."<br />";
-
-    }
-
-    } // end brace for if(isset
-
-    else {
-
-    //echo "You did not choose an availability.";
-
-    }
-}
-?>
-
 <?php
 //load all the comments about the property on the page
 if($allowedToView){
@@ -160,6 +122,29 @@ else {
 }
 
 ?>
+
+<?php
+if(isset($_POST['submitFeedbackBtn'])){
+    include_once 'config.php';
+
+    $query = "INSERT INTO Comments (email, address, property_rating, comment) VALUES (? , ? , ?, ?);";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('ssis', $_SESSION['email'], $address, $_POST['Rating'], $_POST['input']);
+    $stmt->execute();
+}
+?>
+
+<?php
+if(isset($_POST['replyBtn'])){
+    include_once 'config.php';
+
+    $query = "UPDATE comments set address=?,email=?, price=?, district_name=?, rooms=?, type=? where address = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param('ssis', $_SESSION['email'], $address, $_POST['Rating'], $_POST['input']);
+    $stmt->execute();
+}
+?>
+
 <?php
 //add selected bookings
     //echo "checking time";
@@ -215,15 +200,15 @@ else {
 
 
         <h2 >  
-        <?php 
-        if ($property_info['email'] === $_SESSION['email'])
-            echo "Property @ " . $address  . " owned by "  . "YOU!";
-        else
-            echo "Property @ " . $address  . " owned by "  . $property_info['email']; 
-        //. "!";
-        ?>
+            <?php 
+            if ($property_owner['email'] === $_SESSION['email'])
+                header("Location: myBookingStatuses.php?propertyAddress=" . urlencode($address));
+            else
+                echo "Property @ " . $address  . " owned by "  . $property_owner['email']; 
+            //. "!";
+            ?>
         </h2>
-        <table>
+        <table class="table">
             <tr>
                 <td>Address</td>
                 <td><input type='text' name='address' id='address' value="<?php echo $property_info['address']; ?>" disabled/></td>
@@ -244,8 +229,8 @@ else {
                 <td>Room(s) Type </td>
                 <td><input type='text' name='type' id='type' value="<?php echo $property_info['type']; ?>"disabled /></td>
             </tr>
-            <tr> <td> Features </td> </tr>
         </table>
+        <h2> Features </h2>
         <?php
             if ($property_features['private_bath'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Private Bath</a>";
             else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Private Bath</a>";
@@ -325,29 +310,55 @@ else {
             <td> <input type='submit' name='bookBtn' id='bookBtn' value='Book!' /> </td>
         </table>
     </form>
+
     <tr> <td> Comments </td> </tr>
      <?php
         if ($commentResults != ""){
             $rating = array();
             $comment = array();
+            $replies = array();
             while ($row_results = $commentResults->fetch_assoc()) {
                 array_push($rating, ($row_results['property_rating']));
                 array_push($comment, ($row_results['comment']));
+                array_push($replies, ($row_results['reply']));
             }
-            /*<a href="http://example.com">
-                <div style="height:100%;width:100%">
-                  hello world
-                </div>
-              </a>*/
+            echo "<table class = \"table table-bordered table-striped\">
+                    <col width = \"10%\">
+                    <col width = \"40%\">
+                    <col width = \"40%\">
+                    <th> Rating </th>
+                    <th> Comment </th>";
+                    if ($_SESSION['email'] == $property_owner['email']) echo "<th> Reply </th>";
             for ($i = 0; $i < count($rating); $i++){  
                 echo "<tr>
-                    <td> 
-                        " . $rating[$i] . "
-                    </td>
-                    <td>
-                        " . $comment[$i] . "
-                    </td>   
-                </tr>";
+                    <td>" . $rating[$i] . "</td>
+                    <td>" . $comment[$i] . "</td>";
+                if ($replies[$i] == "") {
+                    echo "<td> <b> Reply to Comment </b>";
+                    echo "<form name='addComment' id='addComment' action='viewProperty.php?propertyAddress=" . urlencode($address) . "' method='post'>
+                          <textarea class=\"form-control\" rows=\"3\" name = \"input\"></textarea>                          <input class=\"btn btn-primary\" type='submit' id='replyBtn' name='replyBtn' value='Reply to Comment'/> 
+                          </form> </td>";
+                } else {       
+                    echo "<td>" . $replies[$i] . "</td>";
+                }   
+                echo "</tr>";
+            }
+            echo "</table>";
+            for ($i = 0; $i < sizeof($commenters); $i++){
+                if ($commenters['email'] == $_SESSION['email']){
+                    echo "<h2> Submit Feedback </h2>";
+                    echo "<form name='addComment' id='addComment' action='viewProperty.php?propertyAddress=" . urlencode($address) . "' method='post'>
+                          <textarea class=\"form-control\" rows=\"3\" name = \"input\"></textarea>
+                          <select name='Rating' id='Rating'>
+                                <option value=\"01\">1</option>
+                                <option value=\"02\">2</option>
+                                <option value=\"03\">3</option>
+                                <option value=\"04\">4</option>
+                                <option value=\"05\">5</option>
+                          </select>
+                          <input class=\"btn btn-primary\" type='submit' id='submitFeedbackBtn' name='submitFeedbackBtn' value='Submit Feedback'/> 
+                          </form>";
+                }
             }
         }
    ?>

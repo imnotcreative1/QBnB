@@ -119,7 +119,7 @@
                         if (is_null($ratingArray[$i])) echo "<td> No ratings </td>";
                         else echo "<td> " . $ratingArray[$i] . "</td>";
                         echo "<td> <a href=\"/QBnB/editProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> </td>";
-                        echo "<td><a href=\"/QBnB/deleteProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Delete</a></td>";
+                        echo "<td> <a href=\"/QBnB/deleteProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Delete</a></td>";
                         echo "</tr>";
                     }
                 ?>

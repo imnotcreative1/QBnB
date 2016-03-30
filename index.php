@@ -187,7 +187,7 @@ if(isset($_POST['loginBtn'])){
             <tr>
                 <td></td>
                 <td>
-                    <input class="btn btn-primary butSpace" type='submit' id='signupBtn' name='signupBtn' value='Sign Up' /> 
+                    <input class="btn btn-primary" type='submit' id='signupBtn' name='signupBtn' value='Sign Up' /> 
                 </td>
             </tr>
         </table>

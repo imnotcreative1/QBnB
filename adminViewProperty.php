@@ -61,6 +61,14 @@
     $result = $stmt->get_result();
     $comments = $result;
 
+
+    $query = "SELECT private_bath, shared_bath, close_to_subway, pool, full_kitchen, laundry FROM features WHERE address = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $address);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $property_features = $result->fetch_assoc();
+
     }
     else {
     //User is not logged in. Redirect the browser to the login index.php page and kill this page.
@@ -102,10 +110,28 @@
                 <td>Room(s) Type</td>
                 <td><input type='text' name='type' id='type' value="<?php echo $myrow['type']; ?>"disabled /></td>
             </tr>
+            <tr>
+                <td>Features</td>
+                <td>           
+                    <?php
+                        if ($property_features['private_bath'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Private Bath</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Private Bath</a>";
+                        if ($property_features['shared_bath'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Shared Bath</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Shared Bath</a>";
+                        if ($property_features['close_to_subway'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Close to Subway</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Close to Subway</a>";
+                        if ($property_features['pool'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Pool</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Pool</a>";
+                        if ($property_features['full_kitchen'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Full Kitchen</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Full Kitchen</a>";
+                        if ($property_features['laundry'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Laundry</a>";
+                        else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Laundry</a>";
+                    ?>
+                </td>
+            </tr>
  
         </table>
-    </form>
-    
+    </form>    
 
    <div class="col-md-4" id = "BookingsCol">
        <h3 class = "MidHeader"> Bookings</h3>
