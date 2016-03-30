@@ -10,49 +10,19 @@
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
 
-<nav class = "header">
-  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-</nav>
-
 <body>
     <?php
     //Create a user session or resume an existing one
     session_start();
     ?>
-
-    <?php
-    if(isset($_POST['updateBtn']) && isset($_SESSION['email'])){
-    // include database connection
-    include_once 'config.php'; 
-
-    $query = "UPDATE member SET password=?,phone_num=?, year = ? WHERE email=?";
-
-    $stmt = $con->prepare($query);  
-    $stmt->bind_param('ssss', $_POST['password'], $_POST['phone_num'], $_POST['gradYear'], $_SESSION['email']);
-    // Execute the query
-        if($stmt->execute()){
-            echo "Record was updated. <br/>";
-        }else{
-            echo 'Unable to update record. Please try again. <br/>';
-        }
-    }
-    ?>
-
-    <?php
-    if (isset($_DELETE['deletePropertyBtn']) && isset($_SESSION['email'])){
-    include_once 'config.php';
-
-    $query1 = "";
-    $query2 = "";
-    $query3 = "";
-
-    $stmt = $con->prepare($query);
-
-    }
-    ?>
+    <nav class = "header">
+      <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
+      <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
+      <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
+      <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
+      <li class = "navp"><a href="/QBnB/about.php">About</a></li>
+      <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
+    </nav>
 
     <?php
 
@@ -80,17 +50,17 @@
 
         //Make another query when the pages loads to add the list of bookings for a user
 
-        $listBookingsQuery = "SELECT * from booking
-        JOIN availability on booking.id = availability.id
+        $listBookingsQuery = "SELECT availability.period, booking.booking_status, property.address, property.price from booking
+        INNER JOIN availability on booking.id = availability.id INNER JOIN property on availability.address = property.address
         WHERE booking.email = ?";
 
         $stmt2 = $con->prepare($listBookingsQuery);
         $stmt2->bind_Param("s", $_SESSION['email']);
-
-        $stmt2->execute();
-
-        // results 
-        $result2 = $stmt2->get_result();
+        $result2 = "";
+        if ($stmt2->execute()){
+            //echo "success in selecting booking information";
+            $result2 = $stmt2->get_result();
+        }
 
         //Make a query when the page loads to add the list of holdings for a user
 
@@ -115,124 +85,90 @@
     ?>
 
     <!-- dynamic content will be here -->
+    <div class="col-md-10">
     <h2 class = "greeting"> Welcome  
     <?php echo $myrow['email']; ?>, 
     <a href="index.php?logout=1">Log Out</a><br/>
     </h2>
-    <div class="col-md-2">
-    <h3 class = "PinfoHead"> Your Profile Information </h3>
-    <form name='editProfile' id='editProfile' action='profile.php' method='post'>
-        <table border='0'>
-            <tr>
-                <td>Email</td>
-                <td><input type='text' name='email' id='email' disabled  value="<?php echo $myrow['email']; ?>"  /></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                 <td><input type='text' name='password' id='password'  value="<?php echo $myrow['password']; ?>" /></td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td><input type='value' name='phone_num' id='phone_num'  value="<?php echo $myrow['phone_num']; ?>" /></td>
-            </tr>
-             <tr>
-                <td>Graduation Year</td>
-                <td><input type='value' name='gradYear' id='gradYear'  value="<?php echo $myrow['year']; ?>" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type='submit' name='updateBtn' id='updateBtn' value='Update' /> 
-                </td>
-            </tr>
-        </table>
-    </form>
     </div>
-    <div class="col-md-5" id = "profileMidCol">
-    <h3 class = "myBookingHeader"> List of Your Bookings </h3>
-    <?php
-        //display id, period, address
-        $idArray = array();
-        $periodArray = array();
-        $addressArray = array();
-        while ($row_users = $result2->fetch_assoc()) {
-            array_push($idArray, ($row_users['id']));
-            array_push($periodArray, ($row_users['period']));
-            array_push($addressArray, ($row_users['address']));
-        }  
-    ?>
-        <div class="col-md-4"> Id 
-            <?php   
-                foreach($idArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
-                }
+    <div class="col-md-2">
+    <form method='GET' action="/QBnB/profileInfo.php"><input style="width: 8em;height:3em;" type='submit' name='profileInfoBtn' id='profileInfoBtn' value='Profile Info' /></form>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-6" class = "profileMidCol">
+        
+            <h3> List of Your Properties </h3>
+            <?php
+                $priceArray = array();
+                $addressArray = array();
+                $bookingArray = array();
+                $ratingArray = array();
+                while ($row_users = $result3->fetch_assoc()) {
+                    array_push($priceArray, ($row_users['price']));
+                    array_push($addressArray, ($row_users['address']));
+                    array_push($bookingArray, ($row_users['numBookings']));
+                    array_push($ratingArray, ($row_users['rating']));
+                }  
             ?>
+            <table class="table table-striped">
+                <tr> 
+                    <th> Address </th>
+                    <th> Price </th>
+                    <th> No. Bookings </th>
+                    <th> Average Rating </th>
+                    <th> Options </th>
+                    <th></th>
+                </tr>
+                <?php   
+                    for ($i = 0; $i < sizeof($priceArray) ; $i++){
+                        echo "<tr>";
+                        echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i] . "</td>";
+                        echo "<td> " . $priceArray[$i] . "</td>";
+                        echo "<td> " . $bookingArray[$i] . "</td>";
+                        if (is_null($ratingArray[$i])) echo "<td> No ratings </td>";
+                        else echo "<td> " . $ratingArray[$i] . "</td>";
+                        echo "<td> <a href=\"/QBnB/editProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> </td>";
+                        echo "<td><form method='delete'><input type='submit' name='deletePropertyBtn' id='deletePropertyBtn' value='Delete' /></form></td>";
+                        echo "</tr>";
+                    }
+                ?>
+            </table>
 
         </div>
-        <div class="col-md-4"> Period
-            <?php 
-                foreach($periodArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
-                }
-            ?>
-
-        </div>
-        <div class="col-md-4"> Address
-            <?php 
-                foreach($addressArray as $i){
-                    echo "<p> </p>";
-                    echo "<tr class = \"rowlength\"><td> " . $i . "</td></tr>";
-                }
-            ?>
-
-        </div>
-        <h3> List of Your Properties </h3>
+        <div class="col-md-6"> 
+            <h3 class = "myBookingHeader"> List of Your Bookings </h3>
         <?php
+            //display id, period, address
             $priceArray = array();
+            $periodArray = array();
             $addressArray = array();
-            $bookingArray = array();
-            $ratingArray = array();
-            while ($row_users = $result3->fetch_assoc()) {
-                array_push($priceArray, ($row_users['price']));
+            $status = array();
+            while ($row_users = $result2->fetch_assoc()) {
+                array_push($priceArray, $row_users['price']);
+                array_push($status, ($row_users['booking_status']));
+                array_push($periodArray, ($row_users['period']));
                 array_push($addressArray, ($row_users['address']));
-                array_push($bookingArray, ($row_users['numBookings']));
-                array_push($ratingArray, ($row_users['rating']));
             }  
         ?>
-        <table class="table table-striped">
-            <tr> 
-                <th> Address </th>
-                <th> Price </th>
-                <th> No. Bookings </th>
-                <th> Average Rating </th>
-                <th> Options </th>
-                <th></th>
-            </tr>
-            <?php   
-                for ($i = 0; $i < sizeof($priceArray) ; $i++){
-                    echo "<tr>";
-                    echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i] . "</td>";
-                    echo "<td> " . $priceArray[$i] . "</td>";
-                    echo "<td> " . $bookingArray[$i] . "</td>";
-                    if (is_null($ratingArray[$i])) echo "<td> No ratings </td>";
-                    else echo "<td> " . $ratingArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/edit.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> </td>";
-                    echo "<td><form method='delete'><input type='submit' name='deletePropertyBtn' id='deletePropertyBtn' value='Delete' /></form></td>";
-                    echo "</tr>";
-                }
-            ?>
-        </table>
-
+            <table class="table table-striped">
+            <th > Period </th>
+            <th> Address </th>
+            <th> Price </th>
+            <th> Status </th>
+            <th> Options </th> 
+                <?php 
+                    for($i = 0; $i < count($periodArray); $i++){
+                        echo "<tr>" . "<td>" . $periodArray[$i] . "</td>"
+                                . "<td>" . $addressArray[$i] . "</td>"
+                                . "<td>" . $priceArray[$i] . "</td>"
+                                . "<td>" . $status[$i] . "</td>";
+                                echo "<td> <a href=\"/QBnB/editProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Comment/Rate</a>";
+                                echo "</tr>";
+                    }
+                ?>
+            </table>
+        </div> 
     </div>
-    <div class="col-md-5"> 
-    <ul> 
-        <li> Add Booking Button </li>
-        <li> Remove Booking Button </li>
-        <li> View Comments </li>
-    </ul>
-    </div> 
 </body>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
