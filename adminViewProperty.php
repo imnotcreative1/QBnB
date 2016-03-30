@@ -18,31 +18,47 @@
  <?php
  //grabs property information
  $address = urldecode($_GET['propertyAddress']);
- echo "address is " . $address;
- //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
- //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
- $allowedToEdit = 1;
+
  $allowedToEdit = ($_SESSION['admin']); //Add functionality to compare the email with the property to be edited
- //Loading the property to be edited
- echo $_SESSION['admin'];
+
 if($allowedToEdit){
     include_once 'config.php';
+    //query property details
     $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $address);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
-    $num = $result->num_rows;
-    if ($num > 0){
-        echo "Property Loaded";
-        $myrow = $result->fetch_assoc();
+    $myrow = $result->fetch_assoc();
 
-    }
-    else {
-        echo "Property Failed to Load";
-        //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
-    }
+
+    //query booking details
+    $query = "SELECT email, booking_status, period from booking natural join availability natural join (select address from property where address = ?) as T" ;
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $address);
+    //$stmt->bind_param("s", $address);//Uncomment this after testing
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $bookings = $result;
+
+     //query availability details
+    $query = "SELECT period from  availability natural join property where address = ?" ;
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $address);
+    //$stmt->bind_param("s", $address);//Uncomment this after testing
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $availabilities = $result;
+
+    //query ratings details
+    $query = "SELECT *  from  comments where address = ?" ;
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $address);
+    //$stmt->bind_param("s", $address);//Uncomment this after testing
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $comments = $result;
 
 } 
  ?>
@@ -62,9 +78,12 @@ if($allowedToEdit){
     $stmt->execute();
     $result = $stmt->get_result();
     $num = $result->num_rows;
+
+
+
     if ($num > 0){
         echo "Property Loaded";
-        $searchResults = $result->fetch_assoc();
+        $searchResults = $result;
 
     }
     else {
@@ -176,6 +195,7 @@ else {
     //. "!";
     ?>
 </h2>
+
     <form name='newProperty' id='newProperty' method='post'>
         <table border='0'>
             <tr>
@@ -291,6 +311,77 @@ else {
             }
         }
    ?>
+
+   <div class="col-md-4" id = "BookingsCol">
+       <h3 class = "MidHeader"> Bookings</h3>
+        <?php
+            $bookingEmailArray = array();
+            $statusArray = array();
+            $periodArray = array();
+            while ($row_users = $bookings->fetch_assoc()) {
+                array_push($bookingEmailArray, ($row_users['email']));
+                array_push($statusArray, ($row_users['booking_status']));
+                array_push($periodArray, ($row_users['period']));
+            }  
+        ?>
+        <table class="table table-striped">
+            <tr> 
+                <th> Email </th>
+                <th> Status </th>
+                <th> Period </th>
+            </tr>
+            <?php   
+                for ($i = 0; $i < sizeof($bookingEmailArray) ; $i++){
+                    echo "<tr>" . "<td>" . $bookingEmailArray[$i] . "</td>";
+                    echo "<td>" . $statusArray[$i]. "</td>";
+                    echo "<td>" . $periodArray[$i]. "</td>" . "</tr>";
+                }
+            ?>
+        </table>
+
+</div>
+ <div class="col-md-4" id = "Availability Column">
+       <h3 class = "AvailHeader"> Availabilities</h3>
+        <?php
+            $availabilityArray = array();
+            while ($row_users = $availabilities->fetch_assoc()) {
+                array_push($availabilityArray, ($row_users['period']));
+            }  
+        ?>
+        <table class="table table-striped">
+            <tr> 
+                <th> Period </th>
+            </tr>
+            <?php   
+                for ($i = 0; $i < sizeof($availabilityArray) ; $i++){
+                    echo "<tr>" . "<td>" . $availabilityArray[$i] . "</td>". "</tr>";
+                }
+            ?>
+        </table>
+</div>
+ <div class="col-md-4" id = "Comments Column">
+       <h3 class = "commentHeader"> Comments</h3>
+        <?php
+            $commentArray = array();
+            $emailArray = array();
+            $ratingArray = array();
+            
+
+            while ($row_users = $availabilities->fetch_assoc()) {
+                array_push($availabilityArray, ($row_users['period']));
+            }  
+        ?>
+        <table class="table table-striped">
+            <tr> 
+                <th> Period </th>
+            </tr>
+            <?php   
+                for ($i = 0; $i < sizeof($availabilityArray) ; $i++){
+                    echo "<tr>" . "<td>" . $availabilityArray[$i] . "</td>". "</tr>";
+                }
+            ?>
+        </table>
+</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
