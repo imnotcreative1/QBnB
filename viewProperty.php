@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Qbnb - Property View</title>
+        <title>Welcome to QBnB</title>
         <!-- jQuery first, then Bootstrap JS. -->
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
@@ -160,12 +160,25 @@ else {
     echo "checking time";
     if (isset($_POST['bookBtn'])){
         $bookingIdArray = array();
+        include_once 'config.php';
         foreach ($_POST['checkbox'] as $checkPeriod){
-            echo "dfghj";
-            echo $checkPeriod . "\n";
+            //echo "dfghj";
+            //echo "{" . $checkPeriod. "}" . "\n";
+            array_push($bookingIdArray, $checkPeriod);
+            $idArray = array();
+            $queryId = "SELECT id, email from availability
+                where availability.period = ? AND availability.address = ?";
+            $stmt = $con->prepare($queryId);
+            $stmt->bind_param("is", $checkPeriod, $address);
+            if ($stmt->execute()){
+                
+                echo "booked a period </br>";
+            }
+            else {
+                echo "shit</br>";
+            }
         }
-        /*include_once 'config.php';
-        $query = "INSERT into booking (id, email, booking_status)
+        /*$query = "INSERT into booking (id, email, booking_status)
         Values (?, 'REQUESTED')";
 
         $stmt= $con->prepare($query);
@@ -280,10 +293,9 @@ else {
         <table>
             <tr> <td> Period Available </td> </tr> 
             <?php
-                //$count = 0;
+                $count = 0;
                 foreach ($periodArray as $p){
-                    $aVal = "number";
-                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value='<?php echo \'hi\'; ?>' > </td> <td> ". $p . "</td></tr>";
+                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value=" . $p . " ></td> <td> ". $p . "</td></tr>";
                 }
             ?>
             <td> <input type='submit' name='bookBtn' id='bookBtn' value='Book!' /> </td>
