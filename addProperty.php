@@ -29,15 +29,13 @@ if(!isset($_SESSION['email'])){
  if(isset($_POST['createPropertyBtn']) && isset($_SESSION['email'])){
   // include database connection
     include_once 'config.php'; 
-    /*echo "here";
     $query = "INSERT into property Values (?,?, ?, ?, ?, ?)";
  
     $stmt = $con->prepare($query);  
     $stmt->bind_param('ssisis',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"]);
     // Execute the query
         if($stmt->execute()){
-            //echo "Property was added. <br/>";
-            include_once 'datePeriodConversion.php';
+           include_once 'datePeriodConversion.php';
             $month = $_POST['Month'];
             $year = $_POST['Year'];
             $day = $_POST['Day'];
@@ -46,20 +44,21 @@ if(!isset($_SESSION['email'])){
             $query = "INSERT into Availability (period, address) Values (?, ?)";
             $stmt2 = $con->prepare($query);
             //echo $query;
-            //echo $_POST['address'];
+            echo dateToPeriod($dateFormat);
+            //echo $address;
             //$aNum = 100;
-            $stmt2->bind_param('is', dateToPeriod($dateFormat) ,$_POST['address']);
+            $stmt2->bind_param('is', dateToPeriod($dateFormat) ,$address);
             if ($stmt2->execute()){
-                header("Location: /QBnB/profile.php");
-                echo "Availability was added. <br/>";
-                echo dateToPeriod($dateFormat);
+                header("Location: /QBnB/editProperty.php?propertyAddress=" . urlencode($address));
+                //echo "Availability was added. <br/>";
+                //echo dateToPeriod($dateFormat);
             }
             else {
                 echo "Availability was not added. <br/>";
             }
         }else{
             echo 'Unable to add property. Please try again. <br/>';
-        }*/
+        }
  }
 
 
@@ -157,7 +156,7 @@ if(!isset($_SESSION['email'])){
             </select>
         </td>
         <td>
-            <input type='value' name='year' id='year' value="2016"/>
+            <input type='value' name='Year' id='Year' value="2016"/>
             <input type='submit' name='createPropertyBtn' id='createPropertyBtn' value='Create' />
         </td>
         </tr>

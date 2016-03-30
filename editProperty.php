@@ -16,7 +16,7 @@
  ?>
 
  <?php
- $address = $_GET['propertyAddress'];
+ $address = urldecode($_GET['propertyAddress']);
  //echo $address;
  //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
  //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
@@ -55,16 +55,17 @@ if($allowedToEdit){
  if(isset($_POST['editPropertyBtn']) && isset($_SESSION['email'])){
   // include database connection
     include_once 'config.php'; 
-    
-    $query = "Insert into property Values (?,?, ?, ?, ?, ?)";
+    $query = "Update property set address=?,email=?, price=?, district_name=?, rooms=?, type=? where address = ?";
  
     $stmt = $con->prepare($query);  
-    $stmt->bind_param('ssisis',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"]);
+    $stmt->bind_param('ssisiss',  $_POST['address'], $_SESSION['email'], $_POST['price'], $_POST['district_name'], $_POST["rooms"], $_POST["type"],$_POST['address']);
+    //echo $_POST['rooms'];
     // Execute the query
         if($stmt->execute()){
             //echo "Property was updated. <br/>";
-            $currentPageURL = $_SERVER['REQUEST_URI'];
-            //header("Location: /QBnB/editProperty.php" . ); 
+            //echo "sdfg";
+            //$currentPageURL = $_SERVER['REQUEST_URI'];
+            header("Location: /QBnB/editProperty.php?propertyAddress=" . urldecode($_POST['address']) ); 
         }else{
             //echo 'Unable to update record. Please try again. <br/>';
         }
@@ -96,18 +97,30 @@ if($allowedToEdit){
  //add availabiltiy to a property
     if(isset($_POST['addAvailBtn'])){
         include_once 'config.php';
-        $query = "INSERT into availability (period, address) values (101, ?)"; //after testing add period calculation *****************
-
-        $stmt = $con->prepare($query);
-        $stmt->bind_param('s', $address);
-
-        if($stmt->execute()){
-            //echo "availability was added";
+        //echo "here";
+    //Execute Query
+            include_once 'datePeriodConversion.php';
+            $month = $_POST['Month'];
+            $year = $_POST['Year'];
+            $day = $_POST['Day'];
+            $dateFormat= $year . "-" . $month . "-" . $day;
+            echo $dateFormat; 
+            $query = "INSERT into Availability (period, address) Values (?, ?)";
+            $stmt2 = $con->prepare($query);
+            //echo $query;
+            echo dateToPeriod($dateFormat);
+            //echo $address;
+            //$aNum = 100;
+            $stmt2->bind_param('is', dateToPeriod($dateFormat) ,$address);
+            if ($stmt2->execute()){
+                header("Location: /QBnB/editProperty.php?propertyAddress=" . urlencode($address));
+                //echo "Availability was added. <br/>";
+                //echo dateToPeriod($dateFormat);
+            }
+            else {
+                //echo "Availability was not added. <br/>";
+            }
         }
-        else {
-            //echo "Unable to add availability";
-        }
-    }
  ?>
  <?php
  //deleting an availability from a property
@@ -199,15 +212,15 @@ if($allowedToEdit){
         </td>
         <td>
             <select name='Day' id='Day'>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
@@ -233,7 +246,7 @@ if($allowedToEdit){
             </select>
         </td>
         <td>
-            <input type='value' name='year' id='year' value="2016"/>
+            <input type='value' name='Year' id='Year' value="2016" method='POST'/>
             <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Add' /> 
         </td>
         </tr>

@@ -15,13 +15,12 @@
     //Convert Date to Period
     //$date = "2016-01-01";
     function dateToPeriod($date){
-        echo "here\n";
         $InitDate = "2016-01-01";
         $start = strtotime($InitDate);
         $end = strtotime($date);
 
         $days_between = floor(abs($start - $end) / 86400);
-        return $days_between;
+        return ceil($days_between/7);
         //echo "\n" . $days_between;
     }
     
