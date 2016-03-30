@@ -47,9 +47,9 @@
  ?>
 
 <?php
-//    if (isset($_GET['editProperty']) && isset){
-
-  //  }
+if (isset($_DELETE['deletePropertyBtn']) && isset($_SESSION['email'])){
+    echo "Deleting";
+}
 ?>
 
  <?php
@@ -156,9 +156,9 @@ if(isset($_SESSION['email'])){
             <?php   
                 for ($i = 0; $i < sizeof($addressArray) ; $i++){
                     echo "<tr>";
-                    echo "<td> " . $addressArray[$i] . "</td>";
+                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i]."</a></td>";
                     echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">view</a></td>";
+                    echo "<td><a href=\"/QBnB/deleteProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Delete</a></td>";
                     echo "</tr>";
                 }
             ?>
