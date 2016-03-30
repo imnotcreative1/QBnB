@@ -13,6 +13,7 @@
  <?php
   //Create a user session or resume an existing one
  session_start();
+  include 'adminTab.php';
  ?>
  <?php
  include_once 'config.php'; 
@@ -37,14 +38,7 @@
 
         //Make another query when the pages loads to add the list of bookings for a user
     ?>
- <nav class = "header">
-      <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-      <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-      <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
-      <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-      <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-      <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-    </nav>
+
  <?php
     if(isset($_POST['updateBtn']) && isset($_SESSION['email'])){
     // include database connection
@@ -112,6 +106,6 @@
 </div>
 <div class="center-block container">
     <form name='deleteProfile' id='deleteProfile' action='profileInfo.php' method='post'>
-        <a href="/QBnB/deleteMember.php">Cancel Membership</a>"; 
+        <a href="/QBnB/deleteMember.php">Cancel Membership </a>
     </form>
 </div>

@@ -13,6 +13,7 @@
  <?php
   //Create a user session or resume an existing one
  session_start();
+   include 'adminTab.php';
  ?>
 
  <?php
@@ -146,15 +147,6 @@ if($allowedToEdit){
 }
 ?>
 <!-- dynamic content will be here -->
-<nav class = "header">
-  <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
-  <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
-  <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
-  <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-</nav>
-
  <h2 > Edit the Property: <?php 
     //echo $address?>
 </h2>
