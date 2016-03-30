@@ -11,44 +11,54 @@
     </head>
 <body>
  <?php
-  //Create a user session or resume an existing one
- session_start();
-   include 'adminTab.php';
+    //Create a user session or resume an existing one
+    session_start();
+    include 'adminTab.php';
  ?>
 
- <?php
- //grabs property information
- $address = urldecode($_GET['propertyAddress']);
- //echo "address is " . $address;
- //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
- //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
- $allowedToEdit = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
- //Loading the property to be edited
-if($allowedToEdit){
-    include_once 'config.php';
-    $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
-    $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
-    //$stmt->bind_param("s", $address);//Uncomment this after testing
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $num = $result->num_rows;
-    if ($num > 0){
-        //echo "Property Loaded";
-        $myrow = $result->fetch_assoc();
-
-    }
-    else {
+<?php
+    //grabs property information
+    $address = urldecode($_GET['propertyAddress']);
+    //echo "address is " . $address;
+    //$_SESSION['property'] = "testing"; //Delete this after testing ************************************************************************
+    //$_SESSION['email'] = "12mjs17@queensu.ca"; //Delete this after testing ****************************************************************
+    $allowedToView = isset($_SESSION['email']); //Add functionality to compare the email with the property to be edited
+    //Loading the property to be edited
+    if($allowedToView){
+        include_once 'config.php';
+        $query0 = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
+        $stmt = $con->prepare($query0);
+        $stmt->bind_param("s", $address);
+        //$stmt->bind_param("s", $address);//Uncomment this after testing
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $num = $result->num_rows;
+        if ($num > 0){
+            //echo "Property Loaded";
+            $property_info = $result->fetch_assoc();
+            $query1 = "SELECT private_bath, shared_bath, close_to_subway, pool, full_kitchen, laundry FROM features WHERE address = ?";
+            $stmt = $con->prepare($query1);
+            $stmt->bind_param("s", $address);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $num = $result->num_rows;
+            if ($num > 0){
+                $property_features = $result->fetch_assoc();
+            } else {
+                //echo "Property Features Failed to Load";
+                //header("Location: /QBnB/profile.php");
+            }
+        } else {
         //echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
-    }
-} 
+        }
+    } 
 ?>
 
- <?php
- //Loads the features for the property
-     $searchResults = "";
-     if($allowedToEdit){
+<?php
+    //Loads the features for the property
+    $searchResults = "";
+    if($allowedToView){
         include_once 'config.php';
         $query = "SELECT property.address, price, district_name, rooms, type 
             FROM property
@@ -67,7 +77,7 @@ if($allowedToEdit){
 <?php 
     //Load all availibilites for the property
     $availResult;
-    if($allowedToEdit){
+    if($allowedToView){
         include_once 'config.php';
         $query = "SELECT * from availability where address = ?";
         $stmt = $con->prepare($query); 
@@ -88,7 +98,7 @@ if($allowedToEdit){
 ?>
 
 <?php 
- //add availabiltiy to a property
+    //add availabiltiy to a property
     if(isset($_POST['addAvailBtn'])){
         include_once 'config.php';
         $query = "INSERT into availability (period, address) values (101, ?)"; //after testing add period calculation *****************
@@ -105,32 +115,33 @@ if($allowedToEdit){
     }
 ?>
 
- <?php
- //deleting an availability from a property
+<?php
+    //deleting an availability from a property
     if(isset($_POST['deleteAvailBtn'])){
-            $name = $_POST['checkbox'];
+        $name = $_POST['checkbox'];
 
-        if(isset($_POST['checkbox'])) {
+    if(isset($_POST['checkbox'])) {
 
-            //echo "You deleted the following availability(s): <br>";
+        //echo "You deleted the following availability(s): <br>";
 
-        foreach ($name as $checkbox){
-        //echo $checkbox."<br />";
+    foreach ($name as $checkbox){
+    //echo $checkbox."<br />";
 
-        }
+    }
 
-        } // end brace for if(isset
+    } // end brace for if(isset
 
-        else {
+    else {
 
-        //echo "You did not choose an availability.";
+    //echo "You did not choose an availability.";
 
-        }
+    }
 }
 ?>
+
 <?php
 //load all the comments about the property on the page
-if($allowedToEdit){
+if($allowedToView){
     include_once 'config.php';
     $query = "SELECT  * 
         FROM  Comments
@@ -203,38 +214,52 @@ else {
 <!-- dynamic content will be here -->
 
 
- <h2 >  
-    <?php 
-    if ($myrow['email'] === $_SESSION['email'])
-        echo "Property @ " . $address  . " owned by "  . "YOU!";
-    else
-        echo "Property @ " . $address  . " owned by "  . $myrow['email']; 
-    //. "!";
-    ?>
-</h2>
-    <form name='newProperty' id='newProperty' method='post'>
-        <table border='0'>
+        <h2 >  
+        <?php 
+        if ($property_info['email'] === $_SESSION['email'])
+            echo "Property @ " . $address  . " owned by "  . "YOU!";
+        else
+            echo "Property @ " . $address  . " owned by "  . $property_info['email']; 
+        //. "!";
+        ?>
+        </h2>
+        <table>
             <tr>
                 <td>Address</td>
-                <td><input type='text' name='address' id='address' value="<?php echo $myrow['address']; ?>" disabled/></td>
+                <td><input type='text' name='address' id='address' value="<?php echo $property_info['address']; ?>" disabled/></td>
             </tr>
             <tr>
                 <td>Price</td>
-                 <td><input type='value' name='price' id='price' value="<?php echo $myrow['price']; ?>" disabled/></td>
+                 <td><input type='value' name='price' id='price' value="<?php echo $property_info['price']; ?>" disabled/></td>
             </tr>
             <tr>
                 <td>District</td>
-                <td><input type='text' name='district_name' id='district_name' value="<?php echo $myrow['district_name']; ?>" disabled/></td>
+                <td><input type='text' name='district_name' id='district_name' value="<?php echo $property_info['district_name']; ?>" disabled/></td>
             </tr>
              <tr>
                 <td>Rooms</td>
-                <td><input type='value' name='rooms' id='rooms' value="<?php echo $myrow['rooms']; ?>"/ disabled></td>
+                <td><input type='value' name='rooms' id='rooms' value="<?php echo $property_info['rooms']; ?>"/ disabled></td>
             </tr>
              <tr>
-                <td>Room(s) Type</td>
-                <td><input type='text' name='type' id='type' value="<?php echo $myrow['type']; ?>"disabled /></td>
+                <td>Room(s) Type </td>
+                <td><input type='text' name='type' id='type' value="<?php echo $property_info['type']; ?>"disabled /></td>
             </tr>
             <tr> <td> Features </td> </tr>
+        </table>
+        <?php
+            if ($property_features['private_bath'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Private Bath</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Private Bath</a>";
+            if ($property_features['shared_bath'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Shared Bath</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Shared Bath</a>";
+            if ($property_features['close_to_subway'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Close to Subway</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Close to Subway</a>";
+            if ($property_features['pool'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Pool</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Pool</a>";
+            if ($property_features['full_kitchen'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Full Kitchen</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Full Kitchen</a>";
+            if ($property_features['laundry'] > 0) echo "<a href=\"#\" class=\"btn btn-success btn-lg disabled\" role=\"button\">Laundry</a>";
+            else echo "<a href=\"#\" class=\"btn btn-danger btn-lg disabled\" role=\"button\">Laundry</a>";
+        ?>
              <?php
                 if ($searchResults != ""){
                     $address = array();
@@ -278,9 +303,6 @@ else {
                     }
                 }
            ?>
-           
-        </table>
-    </form>
     <?php
         //display id, period, address
         $periodArray = array();
