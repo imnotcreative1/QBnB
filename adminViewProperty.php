@@ -52,7 +52,7 @@
     $availabilities = $result;
 
     //query ratings details
-    $query = "SELECT *  from  comments where address = ?" ;
+    $query = "SELECT * from  comments natural join member where address = ?" ;
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $address);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
@@ -80,6 +80,10 @@
     $result = $stmt->get_result();
     $num = $result->num_rows;
 
+<<<<<<< HEAD
+    $searchResults = $result;
+
+=======
     if ($num > 0){
         echo "Property Loaded";
         $searchResults = $result;
@@ -88,10 +92,17 @@
     else {
         echo "Property Failed to Load";
         //header("Location: /QBnB/profile.php"); //Re-Direct if the user isn't valied ********************************************************************
+>>>>>>> c699fd9c4964ae080d97c2089c927d2d8147ed5c
     }
     } 
 ?>
 
+<<<<<<< HEAD
+ ?>
+ 
+ <?php 
+ //add availabiltiy to a property
+=======
 <?php 
     //Load all availibilites for the property
     $availResult;
@@ -117,6 +128,7 @@
 
 <?php 
     //add availabiltiy to a property
+>>>>>>> c699fd9c4964ae080d97c2089c927d2d8147ed5c
     if(isset($_POST['addAvailBtn'])){
         include_once 'config.php';
         $query = "INSERT into availability (period, address) values (101, ?)"; //after testing add period calculation *****************
@@ -131,6 +143,30 @@
             echo "Unable to add availability";
         }
     }
+<<<<<<< HEAD
+ ?>
+ <?php
+
+?>
+<?php
+//load all the comments about the property on the page
+if($allowedToEdit){
+    include_once 'config.php';
+    $query = "SELECT  * 
+        FROM  Comments
+        WHERE address = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $address);
+    //$stmt->bind_param("s", $address);//Uncomment this after testing
+    $stmt->execute();
+    $commentResults = $stmt->get_result();
+} 
+else {
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+=======
 ?>
 
 <?php
@@ -156,6 +192,7 @@
         }
     }
 ?>
+>>>>>>> c699fd9c4964ae080d97c2089c927d2d8147ed5c
 
 <?php
     //load all the comments about the property on the page
@@ -220,99 +257,10 @@
                 <td>Room(s) Type</td>
                 <td><input type='text' name='type' id='type' value="<?php echo $myrow['type']; ?>"disabled /></td>
             </tr>
-            <tr> <td> Features </td> </tr>
-             <?php
-                if ($searchResults != ""){
-                    $address = array();
-                    $price = array();
-                    $district = array();
-                    $rooms = array();
-                    $type = array();
-                    while ($row_results = $searchResults->fetch_assoc()) {
-                        array_push($address, ($row_results['address']));
-                        array_push($price, ($row_results['price']));
-                        array_push($district, ($row_results['district_name']));
-                        array_push($rooms, ($row_results['rooms']));
-                        array_push($type, ($row_results['type']));
-                    }
-                    /*<a href="http://example.com">
-                        <div style="height:100%;width:100%">
-                          hello world
-                        </div>
-                      </a>*/
-                    for ($i = 0; $i < count($address); $i++){  
-                        echo "<tr>
-                            <td> 
-                                <a href=/QBnB/viewProperty.php?propertyAddress=" . urlencode($address[$i]) . "> 
-                                " . $address[$i] . "
-                            </td>
-                            <td>
-                                " . $price[$i] . "
-                            </td>
-                            <td>
-                                " . $district[$i] . "
-                            </td>
-                            <td>
-                                " . $rooms[$i] . "
-                            </td> 
-                            <td>
-                                " . $type[$i] . "
-                            </td>     
-                        </tr>";
-                    }
-                }
-           ?>
-           
+ 
         </table>
     </form>
-    <p> Availiblities </p>
-    <?php
-        //display id, period, address
-        $periodArray = array();
-        while ($row_avail = $availResult->fetch_assoc()) {
-            array_push($periodArray, ($row_avail['period']));
-            //echo "<p> " . $row_avail['period'] . "</p>";
-        }
-    ?>
-    <form name='checkboxes' id ='checkboxes' method='post'>
-        <table>
-            <tr> <td> Period Available </td> </tr> 
-            <?php
-                //$count = 0;
-                foreach ($periodArray as $p){
-
-                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value='<?php echo $p;?>' > </td> <td> ". $p . "</td></tr>";
-                }
-            ?>
-            <td> <input type='submit' name='bookBtn' id='bookBtn' value='Book!' /> </td>
-        </table>
-    </form>
-    <tr> <td> Comments </td> </tr>
-     <?php
-        if ($commentResults != ""){
-            $rating = array();
-            $comment = array();
-            while ($row_results = $commentResults->fetch_assoc()) {
-                array_push($rating, ($row_results['property_rating']));
-                array_push($comment, ($row_results['comment']));
-            }
-            /*<a href="http://example.com">
-                <div style="height:100%;width:100%">
-                  hello world
-                </div>
-              </a>*/
-            for ($i = 0; $i < count($rating); $i++){  
-                echo "<tr>
-                    <td> 
-                        " . $rating[$i] . "
-                    </td>
-                    <td>
-                        " . $comment[$i] . "
-                    </td>   
-                </tr>";
-            }
-        }
-   ?>
+    
 
    <div class="col-md-4" id = "BookingsCol">
        <h3 class = "MidHeader"> Bookings</h3>
@@ -365,21 +313,32 @@
        <h3 class = "commentHeader"> Comments</h3>
         <?php
             $commentArray = array();
-            $emailArray = array();
+            $userArray = array();
             $ratingArray = array();
-            
+            $replyArray = array();
 
-            while ($row_users = $availabilities->fetch_assoc()) {
-                array_push($availabilityArray, ($row_users['period']));
+
+            while ($row_users = $comments->fetch_assoc()) {
+                array_push($commentArray, ($row_users['comment']));
+                array_push($userArray, ($row_users['Name']));
+                array_push($ratingArray, ($row_users['property_rating']));
+                array_push($replyArray, ($row_users['reply']));
             }  
         ?>
         <table class="table table-striped">
             <tr> 
-                <th> Period </th>
+                <th> Name </th>
+                <th> Rating </th>
+                <th> Comment </th>
+                <th> Reply </th>
             </tr>
             <?php   
-                for ($i = 0; $i < sizeof($availabilityArray) ; $i++){
-                    echo "<tr>" . "<td>" . $availabilityArray[$i] . "</td>". "</tr>";
+                for ($i = 0; $i < sizeof($commentArray) ; $i++){
+                    
+                    echo "<tr>" . "<td>" . $userArray[$i] . "</td>";
+                    echo "<td>" . $ratingArray[$i] . "</td>";
+                    echo "<td>" . $commentArray[$i] . "</td>";
+                    echo "<td>" . $replyArray[$i] . "</td>" . "</tr>";
                 }
             ?>
         </table>
