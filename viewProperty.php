@@ -208,7 +208,8 @@ if(isset($_POST['replyBtn'])){
             //. "!";
             ?>
         </h2>
-        <table class="table">
+    <form name='newProperty' id='newProperty' method='post'>
+        <table border='0'>
             <tr>
                 <td>Address</td>
                 <td><input type='text' name='address' id='address' value="<?php echo $property_info['address']; ?>" disabled/></td>

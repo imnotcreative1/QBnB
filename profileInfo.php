@@ -105,7 +105,7 @@
 </div>
 </div>
 <div class="center-block container">
-    <form name='deleteProfile' id='deleteProfile' action='profileInfo.php' method='post'>
-        <a href="/QBnB/deleteMember.php">Cancel Membership </a>
-    </form>
+    <?php
+    echo "<a href=\"/QBnB/cancelMembership.php?member=" . urlencode( $myrow['email']) ."\">Cancel Membership </a>";
+    ?>
 </div>
