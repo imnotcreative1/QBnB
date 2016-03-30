@@ -158,7 +158,7 @@ if(isset($_SESSION['email'])){
                     echo "<tr>";
                     echo "<td> " . $addressArray[$i] . "</td>";
                     echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?=" . $addressArray[$i] . "\">view</a></td>";
+                    echo "<td> <a href=\"/QBnB/adminViewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">view</a></td>";
                     echo "</tr>";
                 }
             ?>
@@ -186,7 +186,7 @@ if(isset($_SESSION['email'])){
                     echo "<tr>";
                     echo "<td> " . $nameArray[$i] . "</td>";
                     echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/veiwember.php?member=" . $emailArray[$i] . "\">view</a></td>";
+                    echo "<td> <a href=\"/QBnB/veiwember.php?member=" . urlencode($emailArray[$i]) . "\">view</a></td>";
                     echo "</tr>";
                 }
             ?>

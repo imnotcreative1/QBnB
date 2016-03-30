@@ -10,30 +10,26 @@
         <link rel="stylesheet" href="stylesheets/bootstrap-vertical-menu.css">
     </head>
 
-
-<ul class = "header">
+<nav class = "header">
   <li class = "navp"><a href="/QBnB/index.php">Home</a></li>
   <li class = "navp"><a href="/QBnB/profile.php">Profile</a></li>
-  <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
   <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
   <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-  <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
-</ul>
+</nav>
 
 <body>
- <?php
-  //Create a user session or resume an existing one
- session_start();
- ?>
- 
- <?php
- 
- if(isset($_POST['updateBtn']) && isset($_SESSION['email'])){
-  // include database connection
+    <?php
+    //Create a user session or resume an existing one
+    session_start();
+    ?>
+
+    <?php
+    if(isset($_POST['updateBtn']) && isset($_SESSION['email'])){
+    // include database connection
     include_once 'config.php'; 
-    
+
     $query = "UPDATE member SET password=?,phone_num=?, year = ? WHERE email=?";
- 
+
     $stmt = $con->prepare($query);  
     $stmt->bind_param('ssss', $_POST['password'], $_POST['phone_num'], $_POST['gradYear'], $_SESSION['email']);
     // Execute the query
@@ -42,24 +38,31 @@
         }else{
             echo 'Unable to update record. Please try again. <br/>';
         }
- }
- 
- ?>
+    }
+    ?>
 
-<?php
-//    if (isset($_GET['editProperty']) && isset){
+    <?php
+    if (isset($_DELETE['deletePropertyBtn']) && isset($_SESSION['email'])){
+    include_once 'config.php';
 
-  //  }
-?>
+    $query1 = "";
+    $query2 = "";
+    $query3 = "";
 
- <?php
-if(isset($_SESSION['email'])){
-   // include database connection
+    $stmt = $con->prepare($query);
+
+    }
+    ?>
+
+    <?php
+
+    if(isset($_SESSION['email'])){
+    // include database connection
     include_once 'config.php'; 
-    
-    // SELECT query
+
+        // SELECT query
         $query = "SELECT email, password, phone_num, year FROM member WHERE email=?";
- 
+
         // prepare query for execution
         $stmt = $con->prepare($query);
         
@@ -68,7 +71,7 @@ if(isset($_SESSION['email'])){
 
         // Execute the query
         $stmt->execute();
- 
+
         // results 
         $result = $stmt->get_result();
         
@@ -91,9 +94,7 @@ if(isset($_SESSION['email'])){
 
         //Make a query when the page loads to add the list of holdings for a user
 
-        $listHoldingQuery = "select email, address, price, count(*) as 
-        \"NoBookings\" from availability natural join property 
-        natural join (select id from booking) as T group by address";
+        $listHoldingQuery = "SELECT p.address, p.price, avg(property_rating) as rating, count(*) as numBookings FROM Property p inner join (availability a natural join booking b) on a.address = p.address left join comments c on c.address = p.address WHERE p.email = ? and b.booking_status != \"CANCELLED\" and b.booking_status != \"REJECTED\" GROUP BY p.address";
 
         $stmt3 = $con->prepare($listHoldingQuery);
 
@@ -103,19 +104,22 @@ if(isset($_SESSION['email'])){
 
         $result3 = $stmt3->get_result();
         
-} else {
-    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
-    header("Location: index.php");
-    die();
-}
+    } else {
 
-?>
-<!-- dynamic content will be here -->
- <h2 class = "greeting"> Welcome  
+        //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+        header("Location: index.php");
+        die();
+
+    }
+
+    ?>
+
+    <!-- dynamic content will be here -->
+    <h2 class = "greeting"> Welcome  
     <?php echo $myrow['email']; ?>, 
     <a href="index.php?logout=1">Log Out</a><br/>
-</h2>
- <div class="col-md-4">
+    </h2>
+    <div class="col-md-4">
     <h3 class = "PinfoHead"> Your Profile Information </h3>
     <form name='editProfile' id='editProfile' action='profile.php' method='post'>
         <table border='0'>
@@ -143,8 +147,8 @@ if(isset($_SESSION['email'])){
             </tr>
         </table>
     </form>
-</div>
-<div class="col-md-4" id = "profileMidCol">
+    </div>
+    <div class="col-md-4" id = "profileMidCol">
     <h3 class = "myBookingHeader"> List of Your Bookings </h3>
     <?php
         //display id, period, address
@@ -189,10 +193,12 @@ if(isset($_SESSION['email'])){
             $priceArray = array();
             $addressArray = array();
             $bookingArray = array();
+            $ratingArray = array();
             while ($row_users = $result3->fetch_assoc()) {
                 array_push($priceArray, ($row_users['price']));
                 array_push($addressArray, ($row_users['address']));
-                array_push($bookingArray, ($row_users['NoBookings']));
+                array_push($bookingArray, ($row_users['numBookings']));
+                array_push($ratingArray, ($row_users['rating']));
             }  
         ?>
         <table class="table table-striped">
@@ -200,29 +206,35 @@ if(isset($_SESSION['email'])){
                 <th> Address </th>
                 <th> Price </th>
                 <th> No. Bookings </th>
+                <th> Average Rating </th>
                 <th> Options </th>
             </tr>
             <?php   
                 for ($i = 0; $i < sizeof($priceArray) ; $i++){
+                    echo $ratingArray[$i];
                     echo "<tr>";
-                    echo "<td> " . $addressArray[$i] . "</td>";
+                    echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i] . "</td>";
                     echo "<td> " . $priceArray[$i] . "</td>";
                     echo "<td> " . $bookingArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/edit.php?=" . $addressArray[$i] . "\">Edit</a></td>";
+                    if (is_null($ratingArray[$i])) echo "<td> N/A </td>";
+                    else echo "<td> " . $ratingArray[$i] . "</td>";
+                    echo "<td> <a href=\"/QBnB/edit.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> | <form method='delete'><input type='submit' name='deletePropertyBtn' id='deletePropertyBtn' value='Delete' /></form></td>";
                     echo "</tr>";
                 }
             ?>
         </table>
 
-</div>
-<div class="col-md-4"> 
+    </div>
+    <div class="col-md-4"> 
     <ul> 
         <li> Add Booking Button </li>
         <li> Remove Booking Button </li>
         <li> View Comments </li>
     </ul>
-</div> 
+    </div> 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+
 </html>
