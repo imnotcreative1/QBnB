@@ -64,7 +64,8 @@
 
         //Make a query when the page loads to add the list of holdings for a user
 
-        $listHoldingQuery = "SELECT p.address, p.price, avg(property_rating) as rating, count(*) as numBookings FROM Property p inner join (availability a natural join booking b) on a.address = p.address left join comments c on c.address = p.address WHERE p.email = ? and b.booking_status != \"CANCELLED\" and b.booking_status != \"REJECTED\" GROUP BY p.address";
+        $listHoldingQuery = "SELECT T.address, T.price, property_rating from comments right join (select address, price from property where email = ?)as T on T.address = comments.address group by T.address";
+
 
         $stmt3 = $con->prepare($listHoldingQuery);
 
@@ -93,11 +94,6 @@
     </div>
     <div class="col-md-2">
     <form method='GET' action="/QBnB/profileInfo.php"><input style="width: 8em;height:3em;" type='submit' name='profileInfoBtn' id='profileInfoBtn' value='Edit Profile' /></form>
-    <?php
-        if ($_SESSION['admin']){
-            header("Location: admin.php");
-        }
-    ?>
     </div>
     <div class="container-fluid">
         <div class="col-md-6" class = "profileMidCol">
@@ -106,20 +102,18 @@
             <?php
                 $priceArray = array();
                 $addressArray = array();
-                $bookingArray = array();
                 $ratingArray = array();
                 while ($row_users = $result3->fetch_assoc()) {
                     array_push($priceArray, ($row_users['price']));
                     array_push($addressArray, ($row_users['address']));
-                    array_push($bookingArray, ($row_users['numBookings']));
-                    array_push($ratingArray, ($row_users['rating']));
-                }  
+                    array_push($ratingArray, ($row_users['property_rating']));
+                }
+
             ?>
             <table class="table table-striped">
                 <tr> 
                     <th> Address </th>
                     <th> Price </th>
-                    <th> No. Bookings </th>
                     <th> Average Rating </th>
                     <th> Options </th>
                     <th></th>
@@ -129,7 +123,7 @@
                         echo "<tr>";
                         echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">" . $addressArray[$i] . "</td>";
                         echo "<td> " . $priceArray[$i] . "</td>";
-                        echo "<td> " . $bookingArray[$i] . "</td>";
+
                         if (is_null($ratingArray[$i])) echo "<td> No ratings </td>";
                         else echo "<td> " . $ratingArray[$i] . "</td>";
                         echo "<td> <a href=\"/QBnB/editProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Edit </a> </td>";
