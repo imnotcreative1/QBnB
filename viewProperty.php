@@ -171,7 +171,7 @@ if(isset($_POST['replyBtn'])){
                 $stmt2 = $con->prepare($insertBooking);
                 //echo $bookR['id'] . " " . $bookR['email'];
                 //echo "\n" . $insertBooking . "\n" . $bookR['id'] . "\n" . $bookR['email'];
-                $stmt2->bind_param("is", $bookR['id'], $bookR['email']);
+                $stmt2->bind_param("is", $bookR['id'], $_SESSION['email']);
                 if ($stmt2->execute()){
                     //echo "</br> booked it! </br>";
 
