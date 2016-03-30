@@ -206,7 +206,7 @@ else {
  <h2 >  
     <?php 
     if ($myrow['email'] === $_SESSION['email'])
-        echo "Property @ " . $address  . " owned by "  . "YOU!";
+        header("Location: myBookingStatuses.php?propertyAddress=" . urlencode($address));
     else
         echo "Property @ " . $address  . " owned by "  . $myrow['email']; 
     //. "!";
