@@ -18,16 +18,16 @@
 
 <?php
     //grabs property information
-    $address = urldecode($_GET['propertyAddress']);
+    $email = urldecode($_GET['member']);
 
     $allowedToEdit = ($_SESSION['admin']); //Add functionality to compare the email with the property to be edited
 
     if($allowedToEdit){
     include_once 'config.php';
     //query property details
-    $query = "SELECT email, address, price, district_name, rooms, type FROM property WHERE address = ?";
+   $query = "SELECT email, password, phone_num, year, name FROM member WHERE email=?";
     $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
+    $stmt->bind_param("s", $email);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
@@ -35,31 +35,40 @@
 
 
     //query booking details
-    $query = "SELECT email, booking_status, period from booking natural join availability natural join (select address from property where address = ?) as T" ;
+    $query = "SELECT address, email, booking_status, period from booking natural join availability natural join (select address from property where email = ?) as T" ;
     $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
+    $stmt->bind_param("s", $email);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
     $bookings = $result;
 
      //query availability details
-    $query = "SELECT period from  availability natural join property where address = ?" ;
+    $query = "SELECT period, address from  availability natural join property where email = ?" ;
     $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
+    $stmt->bind_param("s", $email);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
     $availabilities = $result;
 
     //query ratings details
-    $query = "SELECT * from  comments natural join member where address = ?" ;
+    $query = "SELECT * from  member natural join comments natural join (select address from property where email = ?) as T";
     $stmt = $con->prepare($query);
-    $stmt->bind_param("s", $address);
+    $stmt->bind_param("s", $email);
     //$stmt->bind_param("s", $address);//Uncomment this after testing
     $stmt->execute();
     $result = $stmt->get_result();
     $comments = $result;
+
+        //query ratings details
+    $query = "SELECT * from  booking natural join availability where email = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("s", $email);
+    //$stmt->bind_param("s", $address);//Uncomment this after testing
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $memberBookings = $result;
 
     }
     else {
@@ -71,64 +80,63 @@
 
 <!-- dynamic content will be here -->
 
- <h2 >  
-    <?php 
-    if ($myrow['email'] === $_SESSION['email'])
-        echo "Property @ " . $address  . " owned by "  . "YOU!";
-    else
-        echo "Property @ " . $address  . " owned by "  . $myrow['email']; 
-    //. "!";
-    ?>
-</h2>
 
-    <form name='newProperty' id='newProperty' method='post'>
+    <h3> Member Information </h3>
+    <form name='editProfile' id='editProfile' action='profileInfo.php' method='post'>
         <table border='0'>
             <tr>
-                <td>Address</td>
-                <td><input type='text' name='address' id='address' value="<?php echo $myrow['address']; ?>" disabled/></td>
+                <td>Name</td>
+                <td><input type='text' name='name' id='name' value="<?php echo $myrow['name']; ?>"  /></td>
             </tr>
             <tr>
-                <td>Price</td>
-                 <td><input type='value' name='price' id='price' value="<?php echo $myrow['price']; ?>" disabled/></td>
+                <td>Email</td>
+                <td><input type='text' name='email' id='email' disabled  value="<?php echo $myrow['email']; ?>"  /></td>
             </tr>
             <tr>
-                <td>District</td>
-                <td><input type='text' name='district_name' id='district_name' value="<?php echo $myrow['district_name']; ?>" disabled/></td>
+                <td>Password</td>
+                 <td><input type='text' name='password' id='password'  value="<?php echo $myrow['password']; ?>" /></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type='value' name='phone_num' id='phone_num'  value="<?php echo $myrow['phone_num']; ?>" /></td>
             </tr>
              <tr>
-                <td>Rooms</td>
-                <td><input type='value' name='rooms' id='rooms' value="<?php echo $myrow['rooms']; ?>"/ disabled></td>
+                <td>Graduation Year</td>
+                <td><input type='value' name='gradYear' id='gradYear'  value="<?php echo $myrow['year']; ?>" /></td>
             </tr>
-             <tr>
-                <td>Room(s) Type</td>
-                <td><input type='text' name='type' id='type' value="<?php echo $myrow['type']; ?>"disabled /></td>
+            <tr>
             </tr>
- 
         </table>
     </form>
     
-
-   <div class="col-md-4" id = "BookingsCol">
+    <h3> Properties </h3>
+    <div class = "row"> 
+    <div class="col-md-4" id = "BookingsCol">
        <h3 class = "MidHeader"> Bookings</h3>
         <?php
             $bookingEmailArray = array();
             $statusArray = array();
             $periodArray = array();
+            $addressArray = array();
             while ($row_users = $bookings->fetch_assoc()) {
                 array_push($bookingEmailArray, ($row_users['email']));
                 array_push($statusArray, ($row_users['booking_status']));
                 array_push($periodArray, ($row_users['period']));
+                array_push($addressArray, ($row_users['address']));
             }  
         ?>
         <table class="table table-striped">
             <tr> 
                 <th> Email </th>
+                <th> Address </th>
                 <th> Status </th>
                 <th> Period </th>
+                
             </tr>
             <?php   
                 for ($i = 0; $i < sizeof($bookingEmailArray) ; $i++){
                     echo "<tr>" . "<td>" . $bookingEmailArray[$i] . "</td>";
+                    echo "<td>" . $addressArray[$i]. "</td>";
                     echo "<td>" . $statusArray[$i]. "</td>";
                     echo "<td>" . $periodArray[$i]. "</td>" . "</tr>";
                 }
@@ -139,18 +147,22 @@
  <div class="col-md-4" id = "Availability Column">
        <h3 class = "AvailHeader"> Availabilities</h3>
         <?php
+            $addressArray = array();
             $availabilityArray = array();
             while ($row_users = $availabilities->fetch_assoc()) {
                 array_push($availabilityArray, ($row_users['period']));
+                array_push($addressArray, ($row_users['address']));
             }  
         ?>
         <table class="table table-striped">
-            <tr> 
+            <tr>
+                <th> Address </th>
                 <th> Period </th>
             </tr>
             <?php   
                 for ($i = 0; $i < sizeof($availabilityArray) ; $i++){
-                    echo "<tr>" . "<td>" . $availabilityArray[$i] . "</td>". "</tr>";
+                    echo "<tr>" ."<td>" . $addressArray[$i]. "</td>";
+                    echo  "<td>" . $availabilityArray[$i] . "</td>". "</tr>";
                 }
             ?>
         </table>
@@ -158,6 +170,7 @@
  <div class="col-md-4" id = "Comments Column">
        <h3 class = "commentHeader"> Comments</h3>
         <?php
+            $addressArray = array();
             $commentArray = array();
             $userArray = array();
             $ratingArray = array();
@@ -169,10 +182,12 @@
                 array_push($userArray, ($row_users['Name']));
                 array_push($ratingArray, ($row_users['property_rating']));
                 array_push($replyArray, ($row_users['reply']));
+                array_push($addressArray, ($row_users['address']));
             }  
         ?>
         <table class="table table-striped">
             <tr> 
+                <th> Address </th>
                 <th> Name </th>
                 <th> Rating </th>
                 <th> Comment </th>
@@ -180,14 +195,48 @@
             </tr>
             <?php   
                 for ($i = 0; $i < sizeof($commentArray) ; $i++){
-                    
-                    echo "<tr>" . "<td>" . $userArray[$i] . "</td>";
+                    echo "<tr>" ."<td>" . $addressArray[$i]. "</td>";
+                    echo  "<td>" . $userArray[$i] . "</td>";
                     echo "<td>" . $ratingArray[$i] . "</td>";
                     echo "<td>" . $commentArray[$i] . "</td>";
                     echo "<td>" . $replyArray[$i] . "</td>" . "</tr>";
                 }
             ?>
         </table>
+</div>
+</div>
+
+<h3> Bookings </h3>
+ <div class="col-md-4" id = "Comments Column">
+       <h3 class = "commentHeader"> Properties booked</h3>
+        <?php
+            $statusArray = array();
+            $periodArray = array();
+            $addressArray = array();
+            while ($row_users = $memberBookings->fetch_assoc()) {
+                array_push($statusArray, ($row_users['booking_status']));
+                array_push($periodArray, ($row_users['period']));
+                array_push($addressArray, ($row_users['address']));
+            }  
+        ?>
+        <table class="table table-striped">
+            <tr> 
+
+                <th> Address </th>
+                <th> Status </th>
+                <th> Period </th>
+                
+            </tr>
+            <?php   
+                for ($i = 0; $i < sizeof($statusArray) ; $i++){
+                    echo "<tr>" ."<td>" . $addressArray[$i]. "</td>";
+                    echo "<td>" . $statusArray[$i]. "</td>";
+                    echo "<td>" . $periodArray[$i]. "</td>" . "</tr>";
+                }
+            ?>
+        </table>
+
+</div>
 </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

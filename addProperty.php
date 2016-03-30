@@ -84,7 +84,13 @@ if(!isset($_SESSION['email'])){
             </tr>
             <tr>
                 <td>District</td>
-                <td><input type='text' name='district_name' id='district_name'/></td>
+                <td>
+                    <select name='district_name' id='district_name'>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Downtown">Downtown</option>
+                        <option value="University">University</option>
+                    </select>
+                </td>
             </tr>
              <tr>
                 <td>Rooms</td>
@@ -92,7 +98,14 @@ if(!isset($_SESSION['email'])){
             </tr>
              <tr>
                 <td>Property Type</td>
-                <td><input type='text' name='type' id='type'/></td>
+                <td>
+                    <select name='type' id='type'>
+                        <option value="apartment">apartment</option>
+                        <option value="bedroom">bedroom</option>
+                        <option value="flat">flat</option>
+                        <option value="house">house</option>
+                    </select>
+                </td>
             </tr>
         </table>
         <div> Add Availability </div>

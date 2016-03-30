@@ -144,7 +144,7 @@ if(isset($_SESSION['email'])){
             <?php   
                 for ($i = 0; $i < sizeof($nameArray) ; $i++){
                     echo "<tr>";
-                    echo "<td> <a href=\"/QBnB/adminViewMember.php?member=" . urlencode($nameArray[$i]) . "\">" . $nameArray[$i] ."</a></td>";
+                    echo "<td> <a href=\"/QBnB/adminViewMember.php?member=" . urlencode($emailArray[$i]) . "\">" . $nameArray[$i] ."</a></td>";
                     echo "<td> " . $emailArray[$i] . "</td>";
                     echo "<td> <a href=\"/QBnB/deleteMember.php?member=" . urlencode($emailArray[$i]) . "\">Delete</a></td>";
                     echo "</tr>";
