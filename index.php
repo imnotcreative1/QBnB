@@ -74,6 +74,7 @@ if(isset($_POST['loginBtn'])){
 
             else
                 $_SESSION['admin']=0;
+                header("Location: /QBnB/profile.php");
 			//Redirect the browser to the profile editing page and kill this page.
 			//header("Location: /QBnB/profile.php");
 			echo "Successful Login";
