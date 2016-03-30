@@ -14,6 +14,15 @@
   //Create a user session or resume an existing one
  session_start();
  ?>
+
+ <?php
+
+if(!isset($_SESSION['email'])){
+    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
+    header("Location: index.php");
+    die();
+}
+ ?>
  
  <?php
  //$_SESSION['email'] = "12mjs17@queensu.ca";
@@ -44,11 +53,8 @@
         }else{
             echo 'Unable to add property. Please try again. <br/>';
         }
- } else {
-    //User is not logged in. Redirect the browser to the login index.php page and kill this page.
-    header("Location: index.php");
-    die();
-}
+ }
+
 
  
  ?>
@@ -89,9 +95,12 @@
             </tr>
         </table>
         <div> Add Availability </div>
-        <div> Day \t Month \t Year </div>
-        <row>
-            <select>
+         <form name='newAvail' id ='newAvail' method='Post'>
+        <table>
+        <!--<tr> <td> Day </td>  <td> Month </td> <td> Year </td> </tr>-->
+        <tr>
+        <td>
+            <select name='Month' id='Month'>
               <option value="JAN">JAN</option>
               <option value="FEB">FEB</option>
               <option value="MAR">MAR</option>
@@ -105,7 +114,9 @@
               <option value="NOV">NOV</option>
               <option value="DEC">DEC</option>
             </select>
-            <select>
+        </td>
+        <td>
+            <select name='Day' id='Day'>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -138,16 +149,14 @@
                 <option value="30">30</option>
                 <option value="31">31</option>
             </select>
-            <input type='value' name='year' id='year'/>
-            <table>
-             <tr>
-                <td></td>
-                <td>
-                    <input type='submit' name='createPropertyBtn' id='createPropertyBtn' value='Update' /> 
-                </td>
-            </tr>
+        </td>
+        <td>
+            <input type='value' name='year' id='year' value="2016"/>
+            <input type='submit' name='addAvailBtn' id='addAvailBtn' value='Update' /> 
+        </td>
+        </tr>
         </table>
-        </row>
+    </form>
 
     </form>
 </body>

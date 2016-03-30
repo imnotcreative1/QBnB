@@ -162,7 +162,7 @@
                                 . "<td>" . $addressArray[$i] . "</td>"
                                 . "<td>" . $priceArray[$i] . "</td>"
                                 . "<td>" . $status[$i] . "</td>";
-                                echo "<td> <a href=\"/QBnB/editProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Comment/Rate</a>";
+                                echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Comment/Rate</a>";
                                 echo "</tr>";
                     }
                 ?>
