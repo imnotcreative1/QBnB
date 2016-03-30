@@ -186,7 +186,7 @@ if(isset($_SESSION['email'])){
                     echo "<tr>";
                     echo "<td> " . $nameArray[$i] . "</td>";
                     echo "<td> " . $emailArray[$i] . "</td>";
-                    echo "<td> <a href=\"/QBnB/veiwember.php?member=" . urlencode($emailArray[$i]) . "\">view</a></td>";
+                    echo "<td> <a href=\"/QBnB/adminViewMember.php?member=" . urlencode($emailArray[$i]) . "\">view</a></td>";
                     echo "</tr>";
                 }
             ?>
