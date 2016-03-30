@@ -49,7 +49,7 @@ if(isset($_POST['loginBtn'])){
 		
         // bind the parameters. This is the best way to prevent SQL injection hacks.
         $stmt->bind_Param("ss", $_POST['email'], $_POST['password']);
-         
+
         // Execute the query
 		$stmt->execute();
  
@@ -95,15 +95,13 @@ if(isset($_POST['loginBtn'])){
 
 	
 	// SELECT query
-        $query = "Insert into member values (?, ?, ?, ?, ?, ?)";
+        $query = "Insert into member (email, password, admin, phone_num, year, degree_name, faculty_name, Name) values (?, ?, 0, ?, ?, ?, ?, ?)";
  
         // prepare query for execution
         if($stmt = $con->prepare($query)){
 		
         // bind the parameters. This is the best way to prevent SQL injection hacks.
-        $stmt->bind_Param("ssiiss", $_POST['signupEmail'], $_POST['signupPassword'],$_POST['phone_num'], $_POST['gradYear'], $_POST['degree_name'], $_POST['faculty_name']);
-        
-
+        $stmt->bind_Param("sssisss", $_POST['signupEmail'],$_POST['signupPassword'],$_POST['phone_num'], $_POST['gradYear'], $_POST['degree_name'], $_POST['faculty_name'], $_POST['signupName']);
 
          
         // Execute the query
@@ -117,6 +115,7 @@ if(isset($_POST['loginBtn'])){
                 $result = $getNewUser->result();
                 $newUserInfo = $result->fetch_assoc();
                 $_SESSION['email'] = $newUserInfo['email'];*/
+                $_SESSION['admin']=0;
                 $_SESSION['email'] = $_POST['signupEmail'];
     			header("Location: /QBnB/profile.php");
     			//echo "user successfully created";
@@ -161,6 +160,10 @@ if(isset($_POST['loginBtn'])){
     <form class="form-horizontal" name='signup' id='signup' action='index.php' method='post'>
         <table>
             <tr>
+                <td>Name</td>
+                <td><input class = "form-control" type='text' name='signupName' id='signupName' /></td>
+            </tr>
+            <tr>
                 <td>Email</td>
                 <td><input class = "form-control" type='text' name='signupEmail' id='signupEmail' /></td>
             </tr>
@@ -178,11 +181,22 @@ if(isset($_POST['loginBtn'])){
             </tr>
             <tr>
                 <td>Degree Name</td>
-                <td><input class = "form-control" type='text' name='degree_name' id='degree_name' /></td>
+                <td><select name='degree_name' id='degree_name'>
+                        <option value="BComm">BComm</option>
+                        <option value="BEng">BEng</option>
+                        <option value="BSc">BSc</option>
+                        <option value="MSc">MSc</option>
+                        <option value="PhD">PhD</option>
+                    </select></td>
             </tr>
             <tr>
                 <td>Faculty Name</td>
-                 <td><input class = "form-control" type='text' name='faculty_name' id='faculty_name' /></td>
+                 <td><select name='faculty_name' id='faculty_name'>
+                        <option value="Arts & Science">Arts & Science</option>
+                        <option value="Commerce">Commerce</option>
+                        <option value="Engineering & Applied Science">Engineering & Applied Science</option>
+                        <option value="Law">Law</option>
+                    </select></td>
             </tr>
             <tr>
                 <td></td>
