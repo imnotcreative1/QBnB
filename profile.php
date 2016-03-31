@@ -148,8 +148,9 @@
             <th> Status </th>
             <th> Options </th> 
                 <?php 
+                    include_once 'datePeriodConversion.php';
                     for($i = 0; $i < count($periodArray); $i++){
-                        echo "<tr>" . "<td>" . $periodArray[$i] . "</td>"
+                        echo "<tr>" . "<td>" . printDate(periodToDate($periodArray[$i])) . "</td>"
                                 . "<td>" . $addressArray[$i] . "</td>"
                                 . "<td>" . $priceArray[$i] . "</td>"
                                 . "<td>" . $status[$i] . "</td>";

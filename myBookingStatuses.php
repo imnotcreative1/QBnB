@@ -109,25 +109,44 @@ if($allowedToEdit){
     }
 } 
 ?>
+<?php
+//Not Needed
+      /*  if ($allowedToView){
+            include_once 'config.php';
+
+            $query = "SELECT period from property  
+                inner join availability on property.address = availability.address
+                where property.address = ?";
+            $stmt = $con->prepare($query);
+            $stmt->bind_param('s', $address);
+            if ($stmt->execute()){
+                $result = $stmt->get_result();
+                $periodResults = $result->fetch_assoc();
+                //echo "got it";
+            }
+        }*/
+    ?>
  <h2 >  
     Your Booking Statuses for <?php echo " " . $address. "!"?>
 </h2>
     <form name='bSes' id='bSes' method='post'>
         <table class="table table-striped">
-            <tr> <th> ID </th><th> Email </th> <th> Status </th> <th> Change Status </th> </tr>
+            <tr> <th> Week Starting From</th><th> Email </th> <th> Status </th> <th> Change Status </th> </tr>
             <?php
                 $emailArray = array();
                 $statusArray = array(); 
-                $idArray = array();
+                $periodArray = array();
+                include_once 'datePeriodConversion.php';
+
                 while ($sresult = $statusi->fetch_assoc()){
                     array_push($emailArray, $sresult['email']);
                     array_push($statusArray, $sresult['booking_status']);
-                    array_push($idArray, $sresult['id']);
+                    array_push($periodArray, $sresult['period']);
                 }
                 for ($i = 0; $i < count($emailArray); $i++){  
                     echo "<tr>
                         <td> 
-                            " . $idArray[$i]  . "
+                            " . printDate(periodToDate($periodArray[$i]))  . "
                         </td>
                         <td> 
                             " . $emailArray[$i]  . "

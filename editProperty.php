@@ -250,11 +250,12 @@ if($allowedToEdit){
     ?>
     <form name='checkboxes' id ='checkboxes' method='post'>
         <table>
-            <tr> <td> Period Available </td> </tr> 
+            <tr> <td> Week Starting From </td> </tr> 
             <?php
                 $count = 0;
+                include_once 'datePeriodConversion.php';
                 foreach ($periodArray as $p){
-                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value=" . $p . " ></td> <td> ". $p . "</td></tr>";
+                    echo "<tr> <td> <input type='checkbox' name='checkbox[]' value=" . $p . " ></td> <td> ". printDate(periodToDate($p)) . "</td></tr>";
                 }
             ?>
             <td> <input type='submit' name='deleteAvailBtn' id='deleteAvailBtn' value='Delete' /> </td>

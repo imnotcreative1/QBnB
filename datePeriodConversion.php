@@ -23,6 +23,15 @@
         return ceil($days_between/7);
         //echo "\n" . $days_between;
     }
+
+    function printDate($date){
+        $endDate = Date('y:m:d', $date + strtotime("+ 7 days"));
+        $Month = array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JULY", "AUG", "SEPT", "OCT", "NOV", "DEC");
+        $monthAsNum= (int) substr($date, 3, 2);
+        //echo $date . " </br>"; 
+        //echo $Month[$monthAsNum] . " </br>"; 
+        return $Month[$monthAsNum  - 1] . " " . substr($date, 6, 2)  . ", 20"  . substr($date, 0, 2) ;
+    }
     
 
 ?>

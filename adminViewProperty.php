@@ -149,13 +149,14 @@
             <tr> 
                 <th> Email </th>
                 <th> Status </th>
-                <th> Period </th>
+                <th> Week Starting </th>
             </tr>
             <?php   
+                include_once 'datePeriodConversion.php';
                 for ($i = 0; $i < sizeof($bookingEmailArray) ; $i++){
                     echo "<tr>" . "<td>" . $bookingEmailArray[$i] . "</td>";
                     echo "<td>" . $statusArray[$i]. "</td>";
-                    echo "<td>" . $periodArray[$i]. "</td>" . "</tr>";
+                    echo "<td>" . printDate(periodToDate($periodArray[$i])) . "</td>" . "</tr>";
                 }
             ?>
         </table>
@@ -166,7 +167,7 @@
         <?php
             $availabilityArray = array();
             while ($row_users = $availabilities->fetch_assoc()) {
-                array_push($availabilityArray, ($row_users['period']));
+                array_push($availabilityArray, printDate(periodToDate($row_users['period'])));
             }  
         ?>
         <table class="table table-striped">

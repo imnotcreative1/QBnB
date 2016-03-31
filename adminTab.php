@@ -7,7 +7,6 @@
       <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
       <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
       <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-      <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
     </nav>';
     }
     else{
@@ -17,6 +16,5 @@
       <li class = "navp"><a href="/QBnB/addProperty.php">Become a host</a></li>
       <li class = "navp"><a href="/QBnB/search.php">Find a Place</a></li>
       <li class = "navp"><a href="/QBnB/about.php">About</a></li>
-      <li class = "navp"><a href="/QBnB/index.php?logout=1">Log Out</a></li>
     </nav>';}
 ?>
