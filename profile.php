@@ -154,6 +154,7 @@
                                 . "<td>" . $priceArray[$i] . "</td>"
                                 . "<td>" . $status[$i] . "</td>";
                                 echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Comment/Rate</a>";
+                                echo "<td> <a href=\"/QBnB/viewProperty.php?propertyAddress=" . urlencode($addressArray[$i]) . "\">Delete</a>";
                                 echo "</tr>";
                     }
                 ?>
