@@ -2,13 +2,6 @@ html, body {
     height: 100%; /* remind these guys they can be as tall as the viewport if they want */
     background-color: #ECECEC;
 }
-html { 
-  background: url("/QBnB/homecoming.jpg") no-repeat center center fixed; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
 #title {
     list-style-type: none;
     margin: 0;
