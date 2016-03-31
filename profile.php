@@ -142,7 +142,7 @@
             }  
         ?>
             <table class="table table-striped">
-            <th > Period </th>
+            <th > Week Staring From </th>
             <th> Address </th>
             <th> Price </th>
             <th> Status </th>

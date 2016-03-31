@@ -69,8 +69,7 @@ if(!isset($_SESSION['email'])){
  ?>
 <!-- dynamic content will be here -->
 
- <h2 > Add New Property, 
-    <a href="index.php?logout=1">Log Out</a><br/>
+ <h2 > Add New Property
 </h2>
     <form name='newProperty' id='newProperty' action='addProperty.php' method='post'>
         <table border='0'>
